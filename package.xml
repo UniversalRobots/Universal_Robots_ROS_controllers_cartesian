@@ -50,11 +50,11 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
 
-  <!-- We have a header-only package for now -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>geometry_msgs</build_export_depend>
-  <build_export_depend>hardware_interface</build_export_depend>
+  <!-- We have a header-only package but unit tests require these. -->
+  <depend>roscpp</depend>
+  <depend>hardware_interface</depend>
+  <depend>geometry_msgs</depend>
 
   <test_depend>rosunit</test_depend>
 
