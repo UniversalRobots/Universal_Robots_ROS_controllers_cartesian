@@ -49,6 +49,8 @@
   <!--   <test_depend>gtest</test_depend> -->
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
+
+  <!-- We have a header-only package for now -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
@@ -58,6 +60,6 @@
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <controller_interface plugin="${prefix}/cartesian_controller_plugins.xml"/>
+    <!-- Other tools can request additional information be placed here -->
   </export>
 </package>
