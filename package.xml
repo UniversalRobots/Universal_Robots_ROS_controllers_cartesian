@@ -51,13 +51,14 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>cartesian_interface</build_depend>
-  <depend>controller_interface</depend>
+  <depend>cartesian_interface</depend>
   <depend>geometry_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>realtime_tools</depend>
   <depend>roscpp</depend>
 
+  <build_depend>controller_interface</build_depend>
+  <exec_depend>controller_interface</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
