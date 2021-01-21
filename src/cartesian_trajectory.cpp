@@ -28,60 +28,24 @@
 // POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////
 
-
 //-----------------------------------------------------------------------------
-/*!\file    cartesian_trajectory.h
+/*!\file    cartesian_trajectory.cpp
  *
  * \author  Stefan Scherzinger <scherzin@fzi.de>
- * \date    2021/01/14
+ * \date    2021/01/21
  *
  */
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
-#include <vector>
-
+#include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
+#include <trajectory_interface/trajectory_interface.h>
 
 namespace cartesian_ros_control
 {
 
-  /**
-   * @brief TODO
-   *
-   * TODO:
-   * - Construct from Cartesian ROS trajectory msg
-   *
-   */
-  class CartesianTrajectory
+  void CartesianTrajectory::sample(const CartesianTrajectorySegment::Time& time, CartesianState& state)
   {
-    public:
-
-      /**
-       * @brief Sample a trajectory at a specified time
-       *
-       * The trajectory's waypoints are interpolated with splines (two-point
-       * polynomials) that are uniquely defined between each two waypoints and
-       * that scale with the fields given:
-       *
-       * - Only pose = linear interpolation
-       * - Pose and velocity = cubic interpolation
-       * - Pose, velocity and acceleration = quintic interpolation
-       *
-       * If this trajectory's waypoints have velocity and acceleration
-       * setpoints, \b state also contains the current velocity and
-       * acceleration, respectively.  A typical application is using the
-       * sampled state as reference for robot control.
-       *
-       * @param time Time at which to sample the trajectory
-       * @param state Cartesian state at \b time
-       */
-      void sample(const CartesianTrajectorySegment::Time& time, CartesianState& state);
-
-
-    private:
-      std::vector<CartesianTrajectorySegment> trajectory_data_;
-  };
+    trajectory_interface::sample(trajectory_data_, time, state);
+  }
 
 }

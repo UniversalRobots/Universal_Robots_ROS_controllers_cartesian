@@ -90,21 +90,6 @@ namespace cartesian_ros_control
    */
   using QuinticSplineSegment = trajectory_interface::QuinticSplineSegment<double>;
 
-  /**
-   * @brief Relative time in seconds
-   */
-  using Time = QuinticSplineSegment::Time;
-
-  /**
-   * @brief State of a 7-dimensional Spline
-   *
-   * The first three dimensions represent Cartesian translation and the last
-   * four represent the rotation quaternion.  Each dimension has its own
-   * position, velocity and acceleration value.
-   *
-   */
-  using SplineState = QuinticSplineSegment::State;
-
 
   /**
    * @brief Cartesian segment between two trajectory waypoints.
@@ -127,7 +112,26 @@ namespace cartesian_ros_control
    */
   class CartesianTrajectorySegment : public QuinticSplineSegment
   {
+
     public:
+      /**
+       * @brief Relative time in seconds
+       */
+      using Time = QuinticSplineSegment::Time;
+
+      using State = CartesianState;
+
+      /**
+       * @brief State of a 7-dimensional Spline
+       *
+       * The first three dimensions represent Cartesian translation and the last
+       * four represent the rotation quaternion.  Each dimension has its own
+       * position, velocity and acceleration value.
+       *
+       */
+      using SplineState = QuinticSplineSegment::State;
+
+
       CartesianTrajectorySegment() = delete;
 
       virtual ~CartesianTrajectorySegment(){};

@@ -127,6 +127,7 @@ include_directories(
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+  src/cartesian_trajectory.cpp
   src/cartesian_trajectory_segment.cpp
 )
 

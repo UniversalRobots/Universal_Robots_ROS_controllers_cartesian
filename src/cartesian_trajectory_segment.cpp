@@ -44,6 +44,8 @@
 
 namespace cartesian_ros_control
 {
+  using Time = CartesianTrajectorySegment::Time;
+  using SplineState = CartesianTrajectorySegment::SplineState;
 
   CartesianTrajectorySegment::CartesianTrajectorySegment(const Time&  start_time,
       const CartesianState& start_state,
