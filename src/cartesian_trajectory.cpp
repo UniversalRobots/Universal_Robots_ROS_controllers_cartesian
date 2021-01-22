@@ -48,4 +48,28 @@ namespace cartesian_ros_control
     trajectory_interface::sample(trajectory_data_, time, state);
   }
 
+  CartesianTrajectory::CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
+  {
+    if (!init(ros_trajectory))
+    {
+      throw std::invalid_argument("Trajectory not valid");
+    };
+  }
+
+  bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
+  {
+    trajectory_data_.clear();
+
+    // Loop through the waypoints and build trajectory segments from each two
+    // neighboring pairs.
+    for (auto i = ros_trajectory.points.begin(); std::next(i) < ros_trajectory.points.end(); ++i)
+    {
+      CartesianTrajectorySegment s(
+          i->time_from_start.toSec(), CartesianState(*i),
+          std::next(i)->time_from_start.toSec(), CartesianState(*std::next(i))
+          );
+      trajectory_data_.push_back(s);
+    }
+    return true;
+  }
 }

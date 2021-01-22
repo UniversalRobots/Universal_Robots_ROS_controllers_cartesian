@@ -41,6 +41,7 @@
 #pragma once
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
+#include <cartesian_control_msgs/CartesianTrajectory.h>
 #include <vector>
 
 
@@ -57,6 +58,29 @@ namespace cartesian_ros_control
   class CartesianTrajectory
   {
     public:
+      CartesianTrajectory() = default;
+
+      /**
+       * @brief Construct from ROS messages
+       *
+       * Calls init() and throws std::invalid_argument if that fails.
+       *
+       * @param ros_trajectory The Cartesian trajectory composed with ROS message types
+       */
+      CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
+
+      virtual ~CartesianTrajectory(){};
+
+      /**
+       * @brief Initialize from ROS message
+       *
+       * \note The first waypoint is expected to be the current state with time_from_start == 0.
+       *
+       * @param ros_trajectory The Cartesian trajectory composed with ROS message types
+       *
+       * @return True if \b ros_trajectory is valid, else false.
+       */
+      bool init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
 
       /**
        * @brief Sample a trajectory at a specified time
