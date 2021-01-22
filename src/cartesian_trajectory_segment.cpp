@@ -51,8 +51,8 @@ namespace cartesian_ros_control
       const CartesianState& start_state,
       const Time&  end_time,
       const CartesianState& end_state)
+    : QuinticSplineSegment(start_time, convert(start_state), end_time, convert(end_state))
   {
-    QuinticSplineSegment(start_time, convert(start_state), end_time, convert(end_state));
   };
 
 
