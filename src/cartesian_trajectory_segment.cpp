@@ -41,11 +41,27 @@
 #include "Eigen/src/Core/GlobalFunctions.h"
 #include "Eigen/src/Core/Matrix.h"
 #include "Eigen/src/Geometry/Quaternion.h"
+#include <tf2_eigen/tf2_eigen.h>
 
 namespace cartesian_ros_control
 {
   using Time = CartesianTrajectorySegment::Time;
   using SplineState = CartesianTrajectorySegment::SplineState;
+
+  CartesianState::CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint& point)
+  {
+      // Pose
+      tf2::fromMsg(point.pose.position, p);
+      tf2::fromMsg(point.pose.orientation, q);
+
+      // Velocity
+      tf2::fromMsg(point.twist.linear, v);
+      tf2::fromMsg(point.twist.angular, w);
+
+      // Acceleration
+      tf2::fromMsg(point.acceleration.linear, v_dot);
+      tf2::fromMsg(point.acceleration.angular, w_dot);
+  }
 
   CartesianTrajectorySegment::CartesianTrajectorySegment(const Time&  start_time,
       const CartesianState& start_state,
@@ -88,12 +104,18 @@ namespace cartesian_ros_control
 
     state.v_dot = Eigen::Vector3d(s.acceleration[0], s.acceleration[1], s.acceleration[2]);
     state.w_dot = Eigen::Vector3d(omega_dot.x(), omega_dot.y(), omega_dot.z());
+
+    // TODO: Re-transform vel and acc to the right reference frame.
+    // It makes sense to put this here because we already have math-intense code
   }
 
 
   SplineState CartesianTrajectorySegment::convert(const CartesianState& state) const
   {
     SplineState spline_state;
+
+    // TODO: Transform vel and acc into body-local frames
+    // It makes sense to put this here because we already have math-intense code
 
     // Convenience method
     auto fill = [](auto& vec, const auto& first, const auto& second)

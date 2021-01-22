@@ -41,6 +41,7 @@
 
 #include <trajectory_interface/quintic_spline_segment.h>
 #include <trajectory_interface/pos_vel_acc_state.h>
+#include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
 
 // Eigen
 #include <Eigen/Dense>
@@ -54,20 +55,21 @@ namespace cartesian_ros_control
   /**
    * @brief Cartesian state with pose, velocity and acceleration
    *
-   * \note Reference frames:
-   * \ref p and \ref q define a child frame with respect to some given reference frame.
-   * The vector quantities \ref v, \ref w, \ref v_dot and \ref w_dot are assumed to be given with
-   * respect to the child frame (NOT with respect to the frame in which \ref p and \ref q
-   * are given). Transform your quantities before initialization.
-   *
-   * TODO:
-   * - Provide functions for reference frame transformation?
-   * - Initialize from ROS types?
-   *   Both would make things easier for users.
+   * All quantities are assumed to be given in one common reference frame.
+   * This frame is also the reference for the pose defined by \ref p and \ref q.
    *
    */
   struct CartesianState
   {
+    CartesianState() = default;
+
+    /**
+     * @brief Convenience constructor for ROS messages
+     *
+     * @param point The desired state
+     */
+    CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint& point);
+
     // Pose
     Eigen::Vector3d p; ///< position
     Eigen::Quaterniond q; ///< rotation
@@ -169,9 +171,9 @@ namespace cartesian_ros_control
        * The computation of quaternion velocities and accelerations from
        * Cartesian angular velocities and accelerations is based on
        * <a href="https://math.stackexchange.com/questions/1792826/estimate-angular-velocity-and-acceleration-from-a-sequence-of-rotations">this blog post</a>.
-       * \note The CartesianState's velocities and accelerations are
-       * assumed to be given in the body-local reference frame that is defined
-       * by its pose. See CartesianState for further details.
+       * \note SplineState has the velocities and accelerations
+       * given in the body-local reference frame that is implicitly defined
+       * by \b state's pose. 
        *
        * @param state The CartesianState to convert
        *

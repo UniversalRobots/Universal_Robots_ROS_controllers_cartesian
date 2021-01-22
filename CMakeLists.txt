@@ -4,15 +4,14 @@ project(cartesian_trajectory_interpolation)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
 
-find_package(Eigen3 REQUIRED)
-add_definitions(-DEIGEN_MPL2_ONLY)
-
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cartesian_control_msgs
   roscpp
   rospy
+  tf2_eigen
 )
 
 ## System dependencies are found with CMake's conventions
@@ -108,8 +107,10 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS
+  cartesian_control_msgs
   roscpp
   rospy
+  tf2_eigen
 #  DEPENDS system_lib
 )
 
@@ -122,7 +123,6 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIR}
 )
 
 ## Declare a C++ library
