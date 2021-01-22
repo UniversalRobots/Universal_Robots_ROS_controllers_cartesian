@@ -9,6 +9,7 @@ add_compile_options(-std=c++14)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   cartesian_control_msgs
+  joint_trajectory_controller
   roscpp
   rospy
   tf2_eigen
@@ -108,6 +109,7 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS
   cartesian_control_msgs
+  joint_trajectory_controller
   roscpp
   rospy
   tf2_eigen
