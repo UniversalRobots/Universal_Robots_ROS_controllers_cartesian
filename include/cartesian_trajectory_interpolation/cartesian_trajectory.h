@@ -41,6 +41,7 @@
 #pragma once
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
+#include <cartesian_trajectory_interpolation/cartesian_state.h>
 #include <cartesian_control_msgs/CartesianTrajectory.h>
 #include <vector>
 

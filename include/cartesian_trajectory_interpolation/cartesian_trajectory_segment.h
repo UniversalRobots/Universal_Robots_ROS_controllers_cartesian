@@ -41,48 +41,10 @@
 
 #include <trajectory_interface/quintic_spline_segment.h>
 #include <trajectory_interface/pos_vel_acc_state.h>
-#include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
-
-// Eigen
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-#include "Eigen/src/Core/Matrix.h"
-#include "Eigen/src/Geometry/Quaternion.h"
+#include <cartesian_trajectory_interpolation/cartesian_state.h>
 
 namespace cartesian_ros_control
 {
-
-  /**
-   * @brief Cartesian state with pose, velocity and acceleration
-   *
-   * All quantities are assumed to be given in one common reference frame.
-   * This frame is also the reference for the pose defined by \ref p and \ref q.
-   *
-   */
-  struct CartesianState
-  {
-    CartesianState() = default;
-
-    /**
-     * @brief Convenience constructor for ROS messages
-     *
-     * @param point The desired state
-     */
-    CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint& point);
-
-    // Pose
-    Eigen::Vector3d p; ///< position
-    Eigen::Quaterniond q; ///< rotation
-
-    // Spatial velocity in body (waypoint) coordinates
-    Eigen::Vector3d v; ///< linear velocity, \f$ v \f$
-    Eigen::Vector3d w; ///< angular velocity, \f$ \omega \f$
-
-    // Spatial acceleration in body (waypoint) coordinates
-    Eigen::Vector3d v_dot; ///< linear acceleration, \f$ \dot{v} \f$
-    Eigen::Vector3d w_dot; ///< angular acceleration, \f$ \dot{\omega} \f$
-
-  };
 
   /**
    * @brief 7-dimensional quintic spline segment
