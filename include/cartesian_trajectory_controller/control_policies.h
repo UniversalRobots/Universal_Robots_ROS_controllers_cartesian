@@ -90,6 +90,8 @@ namespace cartesian_ros_control
          * @param cmd Desired Cartesian state of the manipulator
          */
         void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+
+        cartesian_ros_control::CartesianState getState() const;
     };
 
 
@@ -113,6 +115,8 @@ namespace cartesian_ros_control
          * @param cmd Desired Cartesian state of the manipulator
          */
         void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+
+        cartesian_ros_control::CartesianState getState() const;
     };
 
 
@@ -139,6 +143,8 @@ namespace cartesian_ros_control
          * @param cmd Desired Cartesian state of the manipulator
          */
         void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+
+        cartesian_ros_control::CartesianState getState() const;
     };
 
 
@@ -164,6 +170,8 @@ namespace cartesian_ros_control
          * @param cmd Desired Cartesian state of the manipulator
          */
         void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+
+        cartesian_ros_control::CartesianState getState() const;
     };
 
 

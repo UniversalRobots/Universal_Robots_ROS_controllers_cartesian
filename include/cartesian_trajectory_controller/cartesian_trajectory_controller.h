@@ -40,6 +40,11 @@
 #pragma once
 
 #include <cartesian_trajectory_controller/control_policies.h>
+#include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
+#include <cartesian_control_msgs/FollowCartesianTrajectoryAction.h>
+#include <atomic>
+#include <mutex>
+#include <actionlib/server/simple_action_server.h>
 
 namespace cartesian_trajectory_controller
 {
@@ -47,12 +52,13 @@ namespace cartesian_trajectory_controller
   template <class HWInterface>
     class CartesianTrajectoryController : public cartesian_ros_control::ControlPolicy<HWInterface>
   {
-    //using ControlPolicy::updateCommand;
 
     public:
       CartesianTrajectoryController()
         : cartesian_ros_control::ControlPolicy<HWInterface>()
       {};
+
+      virtual ~CartesianTrajectoryController(){};
 
       bool init(hardware_interface::RobotHW* hw,
           ros::NodeHandle& root_nh,
@@ -64,6 +70,29 @@ namespace cartesian_trajectory_controller
 
       void update(const ros::Time& time, const ros::Duration& period) override;
 
+      void executeCB(const cartesian_control_msgs::FollowCartesianTrajectoryGoalConstPtr& goal);
+
+      void preemptCB();
+
+    protected:
+      using ControlPolicy = cartesian_ros_control::ControlPolicy<HWInterface>;
+
+      struct TrajectoryDuration
+      {
+        TrajectoryDuration() : now(0.0), end(0.0) {}
+
+        ros::Duration end; ///< Planned target duration of the current action.
+        ros::Duration now; ///< Current duration of the current action.
+      };
+
+
+    private:
+      std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
+        action_server_;
+      std::atomic<bool> done_;
+      std::mutex lock_;
+      cartesian_ros_control::CartesianTrajectory trajectory_;
+      TrajectoryDuration trajectory_duration_;
   };
 
 }
