@@ -46,6 +46,14 @@
 #include <cartesian_interface/cartesian_command_interface.h>
 #include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
 #include "cartesian_trajectory_interpolation/cartesian_trajectory_segment.h"
+#include "kdl/chainfksolver.hpp"
+#include <cartesian_trajectory_interpolation/cartesian_state.h>
+
+// KDL
+#include <kdl/chain.hpp>
+#include <kdl/chainfksolvervel_recursive.hpp>
+#include <kdl/chainiksolverpos_lma.hpp>
+#include <memory>
 
 namespace cartesian_ros_control
 {
@@ -134,6 +142,11 @@ namespace cartesian_ros_control
         {
         };
 
+
+        bool init(hardware_interface::RobotHW* hw,
+            ros::NodeHandle& root_nh,
+            ros::NodeHandle& controller_nh) override;
+
         /**
          * @brief TODO:
          *
@@ -142,9 +155,15 @@ namespace cartesian_ros_control
          *
          * @param cmd Desired Cartesian state of the manipulator
          */
-        void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+        void updateCommand(const CartesianState& cmd);
 
-        cartesian_ros_control::CartesianState getState() const;
+        CartesianState getState() const;
+
+      private:
+        std::vector<hardware_interface::JointHandle> joint_pos_handles_;
+        std::unique_ptr<KDL::ChainFkSolverVel_recursive> fk_solver_;
+        std::unique_ptr<KDL::ChainIkSolverPos_LMA> ik_solver_;
+        KDL::Chain robot_chain_;
     };
 
 
