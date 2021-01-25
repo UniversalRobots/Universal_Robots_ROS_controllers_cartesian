@@ -50,6 +50,10 @@ namespace cartesian_trajectory_controller
     bool CartesianTrajectoryController<HWInterface>::
     init(hardware_interface::RobotHW* hw, ros::NodeHandle& nh, ros::NodeHandle& controller_nh)
     {
+      if (!ControlPolicy::init(hw, nh, controller_nh))
+      {
+        return false;
+      }
 
       // Action server
       action_server_.reset(new actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction>(
