@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   cartesian_trajectory_interpolation
   controller_manager
   hardware_interface
+  kdl_parser
+  pluginlib
   roscpp
   rospy
   ur_controllers
@@ -114,6 +116,8 @@ catkin_package(
   cartesian_trajectory_interpolation
   controller_manager
   hardware_interface
+  kdl_parser
+  pluginlib
   roscpp
   rospy
   ur_controllers
