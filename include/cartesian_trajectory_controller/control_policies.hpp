@@ -45,6 +45,8 @@
 #include <kdl/tree.hpp>
 #include <kdl_parser/kdl_parser.hpp>
 #include <kdl/jntarray.hpp>
+#include "hardware_interface/joint_command_interface.h"
+#include "kdl/chainiksolvervel_wdls.hpp"
 #include "kdl/frames.hpp"
 #include "kdl/framevel.hpp"
 #include "kdl/jntarrayvel.hpp"
@@ -55,7 +57,8 @@
 namespace cartesian_ros_control
 {
 
-  bool ControlPolicy<hardware_interface::PositionJointInterface>::init(hardware_interface::RobotHW* hw,
+  template <class HWInterface>
+  bool JointBasedController<HWInterface>::init(hardware_interface::RobotHW* hw,
       ros::NodeHandle& root_nh,
       ros::NodeHandle& controller_nh)
   {
@@ -69,8 +72,8 @@ namespace cartesian_ros_control
     const std::string ns = controller_nh.getNamespace();
 
     // Preconditions
-    auto* pos_hw = hw->get<hardware_interface::PositionJointInterface>();
-    if (!pos_hw)
+    auto* hw_interface = hw->get<HWInterface>();
+    if (!hw_interface)
     {
       ROS_ERROR_STREAM(ns << ": No PositionJointInterface found.");
       return false;
@@ -84,7 +87,7 @@ namespace cartesian_ros_control
     }
     for (size_t i = 0; i < joint_names.size(); ++i)
     {
-      joint_pos_handles_.push_back(pos_hw->getHandle(joint_names[i]));
+      joint_handles_.push_back(hw_interface->getHandle(joint_names[i]));
     }
 
     // Manipulator specific configuration
@@ -122,14 +125,14 @@ namespace cartesian_ros_control
     }
 
     fk_solver_ = std::make_unique<KDL::ChainFkSolverVel_recursive>(robot_chain_);
-    ik_solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(robot_chain_);
 
     return true;
   }
 
-  CartesianState ControlPolicy<hardware_interface::PositionJointInterface>::getState() const
+  template <class HWInterface>
+  CartesianState JointBasedController<HWInterface>::getState() const
   {
-    const size_t size = joint_pos_handles_.size();
+    const size_t size = joint_handles_.size();
 
     KDL::JntArrayVel current(size);
     KDL::FrameVel pose;
@@ -137,8 +140,8 @@ namespace cartesian_ros_control
     // Compute forward kinematics
     for (size_t i = 0; i < size; ++i)
     {
-      current.q(i) = joint_pos_handles_[i].getPosition();
-      current.qdot(i) = joint_pos_handles_[i].getVelocity();
+      current.q(i) = joint_handles_[i].getPosition();
+      current.qdot(i) = joint_handles_[i].getVelocity();
     }
     fk_solver_->JntToCart(current, pose);
 
@@ -160,9 +163,26 @@ namespace cartesian_ros_control
     return state;
   };
 
+  //--------------------------------------------------------------------------------
+  // Joint position
+  //--------------------------------------------------------------------------------
+
+  bool ControlPolicy<hardware_interface::PositionJointInterface>::init(hardware_interface::RobotHW* hw,
+      ros::NodeHandle& root_nh,
+      ros::NodeHandle& controller_nh)
+  {
+    if (!Base::init(hw, root_nh, controller_nh))
+    {
+      return false;
+    };
+
+    ik_solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(robot_chain_);
+    return true;
+  }
+
   void ControlPolicy<hardware_interface::PositionJointInterface>::updateCommand(const CartesianState& cmd)
   {
-    const size_t size = joint_pos_handles_.size();
+    const size_t size = joint_handles_.size();
 
     KDL::JntArray current(size);
     KDL::JntArray target(size);
@@ -176,7 +196,7 @@ namespace cartesian_ros_control
     // Start where we are
     for (size_t i = 0; i < size; ++i)
     {
-      current(i) = joint_pos_handles_[i].getPosition();
+      current(i) = joint_handles_[i].getPosition();
     }
 
     // Compute inverse kinematics
@@ -185,7 +205,56 @@ namespace cartesian_ros_control
     // Command each joint
     for (size_t i = 0; i < size; ++i)
     {
-      joint_pos_handles_[i].setCommand(target(i));
+      joint_handles_[i].setCommand(target(i));
+    }
+  }
+
+  //--------------------------------------------------------------------------------
+  // Joint velocity
+  //--------------------------------------------------------------------------------
+
+  bool ControlPolicy<hardware_interface::VelocityJointInterface>::init(hardware_interface::RobotHW* hw,
+      ros::NodeHandle& root_nh,
+      ros::NodeHandle& controller_nh)
+  {
+    if (!Base::init(hw, root_nh, controller_nh))
+    {
+      return false;
+    };
+
+    ik_solver_ = std::make_unique<KDL::ChainIkSolverVel_wdls>(robot_chain_);
+    return true;
+  }
+
+  void ControlPolicy<hardware_interface::VelocityJointInterface>::updateCommand(const CartesianState& cmd)
+  {
+    const size_t size = joint_handles_.size();
+
+    KDL::JntArray current(size);
+    KDL::JntArray target(size);
+    KDL::Twist goal;
+
+    goal.vel[0] = cmd.v.x();
+    goal.vel[1] = cmd.v.y();
+    goal.vel[2] = cmd.v.z();
+    goal.rot[0] = cmd.w.x();
+    goal.rot[1] = cmd.w.y();
+    goal.rot[2] = cmd.w.z();
+
+    // Start where we are
+    for (size_t i = 0; i < size; ++i)
+    {
+      current(i) = joint_handles_[i].getPosition();
+    }
+
+    // Compute joint velocities
+    ik_solver_->CartToJnt(current, goal, target);
+
+
+    // Command each joint
+    for (size_t i = 0; i < size; ++i)
+    {
+      joint_handles_[i].setCommand(target(i));
     }
   }
 }

@@ -53,6 +53,7 @@
 #include <kdl/chain.hpp>
 #include <kdl/chainfksolvervel_recursive.hpp>
 #include <kdl/chainiksolverpos_lma.hpp>
+#include <kdl/chainiksolvervel_wdls.hpp>
 #include <memory>
 
 namespace cartesian_ros_control
@@ -65,6 +66,31 @@ namespace cartesian_ros_control
    */
   template <class HWInterface>
     using Controller = controller_interface::MultiInterfaceController<HWInterface, ur_controllers::SpeedScalingInterface>;
+
+
+  /**
+   * @brief A common base class for joint-based control policies
+   *
+   * @tparam HWInterface The hardware interface for joint actuation
+   */
+  template <class HWInterface>
+    class JointBasedController
+    : public Controller<HWInterface>
+    {
+      public:
+        JointBasedController() : Controller<HWInterface>(true) {};  // optional speedscaling
+
+        virtual bool init(hardware_interface::RobotHW* hw,
+            ros::NodeHandle& root_nh,
+            ros::NodeHandle& controller_nh) override;
+
+        CartesianState getState() const;
+
+      protected:
+        std::vector<hardware_interface::JointHandle> joint_handles_;
+        std::unique_ptr<KDL::ChainFkSolverVel_recursive> fk_solver_;
+        KDL::Chain robot_chain_;
+    };
 
 
   /**
@@ -133,15 +159,10 @@ namespace cartesian_ros_control
    */
   template <>
     class ControlPolicy<hardware_interface::PositionJointInterface>
-    : public Controller<hardware_interface::PositionJointInterface>
+    : public JointBasedController<hardware_interface::PositionJointInterface>
     {
-
       public:
-        ControlPolicy()
-          : Controller<hardware_interface::PositionJointInterface>(true)  // optional speedscaling
-        {
-        };
-
+        using Base = JointBasedController<hardware_interface::PositionJointInterface>;
 
         bool init(hardware_interface::RobotHW* hw,
             ros::NodeHandle& root_nh,
@@ -157,13 +178,9 @@ namespace cartesian_ros_control
          */
         void updateCommand(const CartesianState& cmd);
 
-        CartesianState getState() const;
 
       private:
-        std::vector<hardware_interface::JointHandle> joint_pos_handles_;
-        std::unique_ptr<KDL::ChainFkSolverVel_recursive> fk_solver_;
         std::unique_ptr<KDL::ChainIkSolverPos_LMA> ik_solver_;
-        KDL::Chain robot_chain_;
     };
 
 
@@ -172,14 +189,14 @@ namespace cartesian_ros_control
    */
   template <>
     class ControlPolicy<hardware_interface::VelocityJointInterface>
-    : public Controller<hardware_interface::VelocityJointInterface>
+    : public JointBasedController<hardware_interface::VelocityJointInterface>
     {
-
       public:
-        ControlPolicy()
-          : Controller<hardware_interface::VelocityJointInterface>(true)  // optional speedscaling
-        {
-        };
+        using Base = JointBasedController<hardware_interface::VelocityJointInterface>;
+
+        bool init(hardware_interface::RobotHW* hw,
+            ros::NodeHandle& root_nh,
+            ros::NodeHandle& controller_nh) override;
 
         /**
          * @brief TODO:
@@ -188,9 +205,10 @@ namespace cartesian_ros_control
          *
          * @param cmd Desired Cartesian state of the manipulator
          */
-        void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+        void updateCommand(const CartesianState& cmd);
 
-        cartesian_ros_control::CartesianState getState() const;
+      private:
+        std::unique_ptr<KDL::ChainIkSolverVel_wdls> ik_solver_;
     };
 
 
