@@ -171,7 +171,7 @@ namespace cartesian_ros_control
     goal.p[0] = cmd.p.x();
     goal.p[1] = cmd.p.y();
     goal.p[2] = cmd.p.z();
-    goal.M = KDL::Rotation::Quaternion(cmd.q.x(), cmd.q.y(), cmd.q.z(), cmd.q.z());
+    goal.M = KDL::Rotation::Quaternion(cmd.q.x(), cmd.q.y(), cmd.q.z(), cmd.q.w());
 
     // Start where we are
     for (size_t i = 0; i < size; ++i)
