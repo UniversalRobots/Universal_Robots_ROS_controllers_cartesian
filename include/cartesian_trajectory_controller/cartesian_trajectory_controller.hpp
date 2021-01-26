@@ -55,6 +55,21 @@ namespace cartesian_trajectory_controller
         return false;
       }
 
+      // Use speed scaling interface if available
+      auto speed_scaling_interface = hw->get<ur_controllers::SpeedScalingInterface>();
+      if (!speed_scaling_interface)
+      {
+        ROS_INFO_STREAM(
+            controller_nh.getNamespace()
+            << ": Your RobotHW seems not to provide speed scaling. Starting without this feature.");
+        speed_scaling_ = nullptr;
+      }
+      else
+      {
+        speed_scaling_ = std::make_unique<ur_controllers::SpeedScalingHandle>(
+            speed_scaling_interface->getHandle("speed_scaling_factor"));
+      }
+
       // Action server
       action_server_.reset(new actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction>(
             controller_nh,
@@ -92,7 +107,9 @@ namespace cartesian_trajectory_controller
     {
       if (action_server_->isActive() && !done_.load())
       {
-        trajectory_duration_.now += period;
+        // Apply speed scaling if available.
+        const double factor = (speed_scaling_) ? *speed_scaling_->getScalingFactor() : 1.0;
+        trajectory_duration_.now += period * factor;
 
 
         // Sample the Cartesian trajectory's target state and command that to

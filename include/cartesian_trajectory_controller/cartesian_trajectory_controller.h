@@ -46,6 +46,9 @@
 #include <mutex>
 #include <actionlib/server/simple_action_server.h>
 
+// Temporary
+#include "ur_controllers/speed_scaling_interface.h"
+
 namespace cartesian_trajectory_controller
 {
 
@@ -88,6 +91,7 @@ namespace cartesian_trajectory_controller
       void timesUp();
 
     private:
+      std::unique_ptr<ur_controllers::SpeedScalingHandle> speed_scaling_;
       std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
         action_server_;
       std::atomic<bool> done_;
