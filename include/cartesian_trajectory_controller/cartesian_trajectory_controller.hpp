@@ -108,8 +108,7 @@ namespace cartesian_trajectory_controller
         }
         else // Time is up. Check goal tolerances and set terminal state.
         {
-          // TODO
-          done_ = true;
+          timesUp();
         }
 
         // TODO: Implement feedback
@@ -173,5 +172,14 @@ namespace cartesian_trajectory_controller
       done_ = true;
     }
 
+  template <class HWInterface>
+    void CartesianTrajectoryController<HWInterface>::timesUp()
+    {
+      // TODO: Check tolerances
+      cartesian_control_msgs::FollowCartesianTrajectoryResult result;
+      result.error_code = cartesian_control_msgs::FollowCartesianTrajectoryResult::SUCCESSFUL;
+      action_server_->setSucceeded(result);
+      done_ = true;
+    }
 
 }

@@ -85,6 +85,7 @@ namespace cartesian_trajectory_controller
         ros::Duration now; ///< Current duration of the current action.
       };
 
+      void timesUp();
 
     private:
       std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
