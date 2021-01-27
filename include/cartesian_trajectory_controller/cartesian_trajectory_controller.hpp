@@ -56,7 +56,7 @@ namespace cartesian_trajectory_controller
       }
 
       // Use speed scaling interface if available
-      auto speed_scaling_interface = hw->get<ur_controllers::SpeedScalingInterface>();
+      auto speed_scaling_interface = hw->get<hardware_interface::SpeedScalingInterface>();
       if (!speed_scaling_interface)
       {
         ROS_INFO_STREAM(
@@ -66,7 +66,7 @@ namespace cartesian_trajectory_controller
       }
       else
       {
-        speed_scaling_ = std::make_unique<ur_controllers::SpeedScalingHandle>(
+        speed_scaling_ = std::make_unique<hardware_interface::SpeedScalingHandle>(
             speed_scaling_interface->getHandle("speed_scaling_factor"));
       }
 

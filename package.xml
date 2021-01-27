@@ -57,7 +57,6 @@
   <build_depend>hardware_interface</build_depend>
   <build_depend>kdl_parser</build_depend>
   <build_depend>pluginlib</build_depend>
-  <build_depend>ur_controllers</build_depend>
   <build_depend>cartesian_trajectory_interpolation</build_depend>
 
   <build_export_depend>roscpp</build_export_depend>
@@ -67,7 +66,6 @@
   <build_export_depend>hardware_interface</build_export_depend>
   <build_export_depend>kdl_parser</build_export_depend>
   <build_export_depend>pluginlib</build_export_depend>
-  <build_export_depend>ur_controllers</build_export_depend>
   <build_export_depend>cartesian_trajectory_interpolation</build_export_depend>
 
   <exec_depend>roscpp</exec_depend>
@@ -75,7 +73,6 @@
   <exec_depend>cartesian_interface</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>hardware_interface</exec_depend>
-  <exec_depend>ur_controllers</exec_depend>
 
 
   <!-- This is important for the export to work -->

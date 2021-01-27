@@ -40,7 +40,7 @@
 #pragma once
 
 #include <controller_interface/multi_interface_controller.h>
-#include <ur_controllers/speed_scaling_interface.h>
+#include <cartesian_interface/speed_scaling_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <cartesian_interface/cartesian_command_interface.h>
@@ -65,7 +65,7 @@ namespace cartesian_ros_control
    * @tparam HWInterface Hardware interface essential for control
    */
   template <class HWInterface>
-    using Controller = controller_interface::MultiInterfaceController<HWInterface, ur_controllers::SpeedScalingInterface>;
+    using Controller = controller_interface::MultiInterfaceController<HWInterface, hardware_interface::SpeedScalingInterface>;
 
 
   /**

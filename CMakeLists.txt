@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   roscpp
   rospy
-  ur_controllers
 )
 
 ## System dependencies are found with CMake's conventions
@@ -120,7 +119,6 @@ catkin_package(
   pluginlib
   roscpp
   rospy
-  ur_controllers
 #  DEPENDS system_lib
 )
 
