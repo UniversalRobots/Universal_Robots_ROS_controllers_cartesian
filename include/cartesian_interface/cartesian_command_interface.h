@@ -65,18 +65,18 @@ public:
   }
   virtual ~PoseCommandHandle() = default;
 
-  void setPose(const geometry_msgs::Pose& pose)
+  void setCommand(const geometry_msgs::Pose& pose)
   {
     assert(cmd_);
     *cmd_ = pose;
   }
 
-  geometry_msgs::Pose getPose() const
+  geometry_msgs::Pose getCommand() const
   {
     assert(cmd_);
     return *cmd_;
   }
-  const geometry_msgs::Pose* getPosePtr() const
+  const geometry_msgs::Pose* getCommandPtr() const
   {
     assert(cmd_);
     return cmd_;
@@ -107,18 +107,18 @@ public:
   }
   virtual ~TwistCommandHandle() = default;
 
-  void setTwist(const geometry_msgs::Twist& twist)
+  void setCommand(const geometry_msgs::Twist& twist)
   {
     assert(cmd_);
     *cmd_ = twist;
   }
 
-  geometry_msgs::Twist getTwist() const
+  geometry_msgs::Twist getCommand() const
   {
     assert(cmd_);
     return *cmd_;
   }
-  const geometry_msgs::Twist* getTwistPtr() const
+  const geometry_msgs::Twist* getCommandPtr() const
   {
     assert(cmd_);
     return cmd_;
