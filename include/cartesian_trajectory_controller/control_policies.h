@@ -114,18 +114,25 @@ namespace cartesian_ros_control
 
       public:
         ControlPolicy()
-          : Controller<cartesian_ros_control::PoseCommandInterface>(true)  // optional speedscaling
-        {
-        };
+          : Controller<cartesian_ros_control::PoseCommandInterface>(true){};  // optional speedscaling
+
+        bool init(hardware_interface::RobotHW* hw,
+            ros::NodeHandle& root_nh,
+            ros::NodeHandle& controller_nh) override;
 
         /**
          * @brief TODO:
          *
          * @param cmd Desired Cartesian state of the manipulator
          */
-        void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+        void updateCommand(const CartesianState& cmd);
 
-        cartesian_ros_control::CartesianState getState() const;
+        CartesianState getState() const;
+
+      private:
+        std::string base_;
+        std::string tip_;
+        cartesian_ros_control::PoseCommandHandle handle_;
     };
 
 

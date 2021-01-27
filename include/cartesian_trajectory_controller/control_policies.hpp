@@ -45,6 +45,8 @@
 #include <kdl/tree.hpp>
 #include <kdl_parser/kdl_parser.hpp>
 #include <kdl/jntarray.hpp>
+#include "cartesian_interface/cartesian_command_interface.h"
+#include "cartesian_interface/cartesian_state_handle.h"
 #include "hardware_interface/joint_command_interface.h"
 #include "kdl/chainiksolvervel_wdls.hpp"
 #include "kdl/frames.hpp"
@@ -162,6 +164,89 @@ namespace cartesian_ros_control
 
     return state;
   };
+
+
+  //--------------------------------------------------------------------------------
+  // Cartesian pose
+  //--------------------------------------------------------------------------------
+
+  bool ControlPolicy<cartesian_ros_control::PoseCommandInterface>::init(hardware_interface::RobotHW* hw,
+      ros::NodeHandle& root_nh,
+      ros::NodeHandle& controller_nh)
+  {
+
+    const std::string ns = controller_nh.getNamespace();
+
+    // Preconditions
+    auto* cmd_interface = hw->get<cartesian_ros_control::PoseCommandInterface>();
+    if (!cmd_interface)
+    {
+      ROS_ERROR_STREAM(ns << ": No PoseCommandInterface found.");
+      return false;
+    }
+    if (!controller_nh.getParam("base", base_))
+    {
+      ROS_ERROR_STREAM(ns << ": Failed to load base from parameter server");
+      return false;
+    }
+    if (!controller_nh.getParam("tip", tip_))
+    {
+      ROS_ERROR_STREAM(ns << ": Failed to load tip from parameter server");
+      return false;
+    }
+
+
+    handle_ = cmd_interface->getHandle(tip_);
+
+    return true;
+  }
+
+  void ControlPolicy<cartesian_ros_control::PoseCommandInterface>::updateCommand(const CartesianState& cmd)
+  {
+    geometry_msgs::Pose target;
+
+    target.position.x    = cmd.p.x();
+    target.position.y    = cmd.p.y();
+    target.position.z    = cmd.p.z();
+    target.orientation.x = cmd.q.x();
+    target.orientation.y = cmd.q.y();
+    target.orientation.z = cmd.q.z();
+    target.orientation.w = cmd.q.w();
+
+    handle_.setPose(target);
+  }
+
+  CartesianState ControlPolicy<cartesian_ros_control::PoseCommandInterface>::getState() const
+  {
+    geometry_msgs::Pose pose = handle_.getPose();
+    geometry_msgs::Twist twist = handle_.getTwist();
+    geometry_msgs::Accel accel = handle_.getAccel();
+
+    CartesianState state;
+    state.p.x() = pose.position.x;
+    state.p.y() = pose.position.y;
+    state.p.z() = pose.position.z;
+    state.q.x() = pose.orientation.x;
+    state.q.y() = pose.orientation.y;
+    state.q.z() = pose.orientation.z;
+    state.q.w() = pose.orientation.w;
+
+    state.v.x() = twist.linear.x;
+    state.v.y() = twist.linear.y;
+    state.v.z() = twist.linear.z;
+    state.w.x() = twist.angular.x;
+    state.w.y() = twist.angular.y;
+    state.w.z() = twist.angular.z;
+
+    state.v_dot.x() = accel.linear.x;
+    state.v_dot.y() = accel.linear.y;
+    state.v_dot.z() = accel.linear.z;
+    state.w_dot.x() = accel.angular.x;
+    state.w_dot.y() = accel.angular.y;
+    state.w_dot.z() = accel.angular.z;
+
+    return state;
+  }
 
   //--------------------------------------------------------------------------------
   // Joint position
