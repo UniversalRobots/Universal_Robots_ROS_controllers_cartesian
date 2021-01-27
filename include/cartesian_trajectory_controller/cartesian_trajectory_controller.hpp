@@ -88,6 +88,8 @@ namespace cartesian_trajectory_controller
   template <class HWInterface>
     void CartesianTrajectoryController<HWInterface>::starting(const ros::Time& time)
     {
+      // Start where we are
+      ControlPolicy::updateCommand(ControlPolicy::getState());
     }
 
   template <class HWInterface>
