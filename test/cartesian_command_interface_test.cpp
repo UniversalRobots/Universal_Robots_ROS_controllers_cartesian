@@ -87,14 +87,14 @@ TEST_F(CartesianCommandInterfaceTest, TestPoseHandleDataHandling)
   new_cmd.orientation.y = 0.5;
   new_cmd.orientation.z = 0.0;
   new_cmd.orientation.w = 0.0;
-  cmd_handle.setPose(new_cmd);
-  EXPECT_DOUBLE_EQ(new_cmd.position.x, cmd_handle.getPose().position.x);
-  EXPECT_DOUBLE_EQ(new_cmd.position.y, cmd_handle.getPose().position.y);
-  EXPECT_DOUBLE_EQ(new_cmd.position.z, cmd_handle.getPose().position.z);
-  EXPECT_DOUBLE_EQ(new_cmd.orientation.x, cmd_handle.getPose().orientation.x);
-  EXPECT_DOUBLE_EQ(new_cmd.orientation.y, cmd_handle.getPose().orientation.y);
-  EXPECT_DOUBLE_EQ(new_cmd.orientation.z, cmd_handle.getPose().orientation.z);
-  EXPECT_DOUBLE_EQ(new_cmd.orientation.w, cmd_handle.getPose().orientation.w);
+  cmd_handle.setCommand(new_cmd);
+  EXPECT_DOUBLE_EQ(new_cmd.position.x, cmd_handle.getCommand().position.x);
+  EXPECT_DOUBLE_EQ(new_cmd.position.y, cmd_handle.getCommand().position.y);
+  EXPECT_DOUBLE_EQ(new_cmd.position.z, cmd_handle.getCommand().position.z);
+  EXPECT_DOUBLE_EQ(new_cmd.orientation.x, cmd_handle.getCommand().orientation.x);
+  EXPECT_DOUBLE_EQ(new_cmd.orientation.y, cmd_handle.getCommand().orientation.y);
+  EXPECT_DOUBLE_EQ(new_cmd.orientation.z, cmd_handle.getCommand().orientation.z);
+  EXPECT_DOUBLE_EQ(new_cmd.orientation.w, cmd_handle.getCommand().orientation.w);
 }
 
 TEST_F(CartesianCommandInterfaceTest, TestTwistHandleConstructor)
@@ -122,13 +122,13 @@ TEST_F(CartesianCommandInterfaceTest, TestTwistHandleDataHandling)
   new_cmd.angular.x = 0.5;
   new_cmd.angular.y = 0.5;
   new_cmd.angular.z = 0.0;
-  cmd_handle.setTwist(new_cmd);
-  EXPECT_DOUBLE_EQ(new_cmd.linear.x, cmd_handle.getTwist().linear.x);
-  EXPECT_DOUBLE_EQ(new_cmd.linear.y, cmd_handle.getTwist().linear.y);
-  EXPECT_DOUBLE_EQ(new_cmd.linear.z, cmd_handle.getTwist().linear.z);
-  EXPECT_DOUBLE_EQ(new_cmd.angular.x, cmd_handle.getTwist().angular.x);
-  EXPECT_DOUBLE_EQ(new_cmd.angular.y, cmd_handle.getTwist().angular.y);
-  EXPECT_DOUBLE_EQ(new_cmd.angular.z, cmd_handle.getTwist().angular.z);
+  cmd_handle.setCommand(new_cmd);
+  EXPECT_DOUBLE_EQ(new_cmd.linear.x, cmd_handle.getCommand().linear.x);
+  EXPECT_DOUBLE_EQ(new_cmd.linear.y, cmd_handle.getCommand().linear.y);
+  EXPECT_DOUBLE_EQ(new_cmd.linear.z, cmd_handle.getCommand().linear.z);
+  EXPECT_DOUBLE_EQ(new_cmd.angular.x, cmd_handle.getCommand().angular.x);
+  EXPECT_DOUBLE_EQ(new_cmd.angular.y, cmd_handle.getCommand().angular.y);
+  EXPECT_DOUBLE_EQ(new_cmd.angular.z, cmd_handle.getCommand().angular.z);
 }
 
 int main(int argc, char** argv)
