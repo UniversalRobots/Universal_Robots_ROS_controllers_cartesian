@@ -132,6 +132,11 @@ namespace cartesian_trajectory_controller
         // cartesian_control_msgs::FollowCartesianTrajectoryFeedback f;
         // action_server_->publishFeedback(f);
       }
+      else // Stay where we are
+      {
+        ControlPolicy::updateCommand(ControlPolicy::getState());
+      }
+
     }
 
 
