@@ -68,7 +68,7 @@ public:
 
   virtual void update(const ros::Time& /*time*/, const ros::Duration& /*period*/) override
   {
-    handle_.setTwist(*command_buffer_.readFromRT());
+    handle_.setCommand(*command_buffer_.readFromRT());
   }
 
   TwistCommandHandle handle_;
