@@ -213,7 +213,7 @@ namespace cartesian_ros_control
     target.orientation.z = cmd.q.z();
     target.orientation.w = cmd.q.w();
 
-    handle_.setPose(target);
+    handle_.setCommand(target);
   }
 
   CartesianState ControlPolicy<cartesian_ros_control::PoseCommandInterface>::getState() const
