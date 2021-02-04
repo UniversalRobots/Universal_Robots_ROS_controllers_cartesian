@@ -34,6 +34,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 #include "Eigen/src/Core/Matrix.h"
+#include "Eigen/src/Geometry/AngleAxis.h"
 #include "Eigen/src/Geometry/Quaternion.h"
 
 #include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
@@ -79,6 +80,13 @@ namespace cartesian_ros_control
      * @return Cartesian State in trajectory waypoint representation
      */
     cartesian_control_msgs::CartesianTrajectoryPoint toMsg(int time_from_start = 0) const;
+
+    /**
+     * @brief Get Euler-Rodrigues vector from orientation
+     *
+     * @return The orientation in axis-angle notation
+     */
+    Eigen::Vector3d rot() const {Eigen::AngleAxisd a(q); return a.axis() * a.angle();};
 
     // Pose
     Eigen::Vector3d p; ///< position
