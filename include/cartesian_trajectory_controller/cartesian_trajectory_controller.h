@@ -41,7 +41,9 @@
 
 #include <cartesian_trajectory_controller/control_policies.h>
 #include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
+#include <cartesian_trajectory_interpolation/cartesian_state.h>
 #include <cartesian_control_msgs/FollowCartesianTrajectoryAction.h>
+#include <cartesian_control_msgs/CartesianTolerance.h>
 #include <atomic>
 #include <mutex>
 #include <actionlib/server/simple_action_server.h>
@@ -88,6 +90,11 @@ namespace cartesian_trajectory_controller
 
       void timesUp();
 
+      void monitorExecution(const cartesian_ros_control::CartesianState& error);
+
+      bool withinTolerances(const cartesian_ros_control::CartesianState& error,
+                            const cartesian_control_msgs::CartesianTolerance& tolerance);
+
     private:
       std::unique_ptr<hardware_interface::SpeedScalingHandle> speed_scaling_;
       std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
@@ -96,6 +103,8 @@ namespace cartesian_trajectory_controller
       std::mutex lock_;
       cartesian_ros_control::CartesianTrajectory trajectory_;
       TrajectoryDuration trajectory_duration_;
+      cartesian_control_msgs::CartesianTolerance path_tolerances_;
+      cartesian_control_msgs::CartesianTolerance goal_tolerances_;
   };
 
 }

@@ -120,19 +120,33 @@ namespace cartesian_trajectory_controller
         {
           std::lock_guard<std::mutex> lock_trajectory(lock_);
 
-          cartesian_ros_control::CartesianState target;
-          trajectory_.sample(trajectory_duration_.now.toSec(), target);
+          cartesian_ros_control::CartesianState desired;
+          trajectory_.sample(trajectory_duration_.now.toSec(), desired);
 
-          ControlPolicy::updateCommand(target);
+          ControlPolicy::updateCommand(desired);
+
+          // Give feedback
+          auto actual = ControlPolicy::getState();
+          auto error = desired - actual;
+
+          cartesian_control_msgs::FollowCartesianTrajectoryFeedback f;
+          auto now = trajectory_duration_.now.toSec();
+          f.desired = desired.toMsg(now);
+          f.actual = actual.toMsg(now);
+          f.error = error.toMsg(now);
+
+          action_server_->publishFeedback(f);
+
+          // Check tolerances and set terminal conditions for the
+          // action server if special criteria are met.
+          monitorExecution(error);
+
         }
         else // Time is up. Check goal tolerances and set terminal state.
         {
           timesUp();
         }
 
-        // TODO: Implement feedback
-        // cartesian_control_msgs::FollowCartesianTrajectoryFeedback f;
-        // action_server_->publishFeedback(f);
       }
       else // Stay where we are
       {
@@ -159,6 +173,8 @@ namespace cartesian_trajectory_controller
       }
 
       // TODO: Check if trajectory is valid
+      path_tolerances_ = goal->path_tolerance;
+      goal_tolerances_ = goal->goal_tolerance;
 
       // Start where we are by adding the current state as first trajectory
       // waypoint.
@@ -199,11 +215,85 @@ namespace cartesian_trajectory_controller
   template <class HWInterface>
     void CartesianTrajectoryController<HWInterface>::timesUp()
     {
-      // TODO: Check tolerances
-      cartesian_control_msgs::FollowCartesianTrajectoryResult result;
-      result.error_code = cartesian_control_msgs::FollowCartesianTrajectoryResult::SUCCESSFUL;
-      action_server_->setSucceeded(result);
+      using Result = cartesian_control_msgs::FollowCartesianTrajectoryResult;
+      Result result;
+
+      // When time is over, sampling gives us the last waypoint.
+      cartesian_ros_control::CartesianState goal;
+      {
+        std::lock_guard<std::mutex> lock_trajectory(lock_);
+        trajectory_.sample(trajectory_duration_.now.toSec(), goal);
+      }
+
+      // TODO: What should happen when speed scaling was active?
+      //       Only check position and orientation in that case?
+
+      // Check if goal was reached.
+      // Abort if any of the dimensions exceeds its goal tolerance
+      auto error = goal - ControlPolicy::getState();
+
+      if (!withinTolerances(error, goal_tolerances_))
+      {
+        result.error_code = Result::GOAL_TOLERANCE_VIOLATED;
+        action_server_->setAborted(result);
+      }
+      else // Succeed
+      {
+        result.error_code = Result::SUCCESSFUL;
+        action_server_->setSucceeded(result);
+      }
+
       done_ = true;
+    }
+
+  template <class HWInterface>
+    void CartesianTrajectoryController<HWInterface>::monitorExecution(const cartesian_ros_control::CartesianState& error)
+    {
+
+      if (!withinTolerances(error, path_tolerances_))
+      {
+        using Result = cartesian_control_msgs::FollowCartesianTrajectoryResult;
+        Result result;
+        result.error_code = Result::PATH_TOLERANCE_VIOLATED;
+        action_server_->setAborted(result);
+        done_ = true;
+      }
+    }
+
+  template <class HWInterface>
+    bool CartesianTrajectoryController<HWInterface>::withinTolerances(const cartesian_ros_control::CartesianState& error,
+                          const cartesian_control_msgs::CartesianTolerance& tolerance)
+    {
+      // Uninitialized tolerances do not need checking
+      cartesian_control_msgs::CartesianTolerance uninitialized;
+      std::stringstream str_1;
+      std::stringstream str_2;
+      str_1 << tolerance;
+      str_2 << uninitialized;
+
+      if (str_1.str() == str_2.str())
+      {
+        return true;
+      }
+
+      auto not_within_limits = [](const auto& a, const auto& b)
+      {
+        return a.x() > b.x || a.y() > b.y || a.z() > b.z;
+      };
+
+      // Check each individual dimension separately.
+      if (not_within_limits(error.p, tolerance.position_error) ||
+          not_within_limits(error.rot(), tolerance.orientation_error) ||
+          not_within_limits(error.v, tolerance.twist_error.linear) ||
+          not_within_limits(error.w, tolerance.twist_error.angular) ||
+          not_within_limits(error.v_dot, tolerance.acceleration_error.linear) ||
+          not_within_limits(error.w_dot, tolerance.acceleration_error.angular))
+      {
+        return false;
+      }
+
+      return true;
+
     }
 
 }
