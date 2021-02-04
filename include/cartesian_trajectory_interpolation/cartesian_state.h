@@ -60,6 +60,18 @@ namespace cartesian_ros_control
     CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint& point);
 
     /**
+     * @brief Difference operator between states
+     *
+     * This is the element-wise difference for all vector quantities and the
+     * difference of rotation for the quaternion.
+     *
+     * @param other State to subtract
+     *
+     * @return The element-wise difference of the two.
+     */
+    CartesianState operator-(const CartesianState& other) const;
+
+    /**
      * @brief Convenience method for conversion
      *
      * @param time_from_start Time from start in seconds

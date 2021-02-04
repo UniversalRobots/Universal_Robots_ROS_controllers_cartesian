@@ -75,6 +75,18 @@ namespace cartesian_ros_control
     tf2::fromMsg(point.acceleration.angular, w_dot);
   }
 
+  CartesianState CartesianState::operator-(const CartesianState& other) const
+  {
+    CartesianState result;
+    result.p = p - other.p;
+    result.q = q * other.q.inverse();
+    result.v = v - other.v;
+    result.w = w - other.w;
+    result.v_dot = v_dot - other.v_dot;
+    result.w_dot = w_dot - other.w_dot;
+
+    return result;
+  }
 
   cartesian_control_msgs::CartesianTrajectoryPoint CartesianState::toMsg(int time_from_start) const
   {
