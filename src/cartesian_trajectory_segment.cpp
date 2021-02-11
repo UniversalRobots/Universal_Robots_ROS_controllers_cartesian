@@ -89,8 +89,11 @@ namespace cartesian_ros_control
     state.v_dot = Eigen::Vector3d(s.acceleration[0], s.acceleration[1], s.acceleration[2]);
     state.w_dot = Eigen::Vector3d(omega_dot.x(), omega_dot.y(), omega_dot.z());
 
-    // TODO: Re-transform vel and acc to the right reference frame.
-    // It makes sense to put this here because we already have math-intense code
+    // Re-transform vel and acc to the correct reference frame.
+    state.v = state.q * state.v;
+    state.w = state.q * state.w;
+    state.v_dot = state.q * state.v_dot;
+    state.w_dot = state.q * state.w_dot;
   }
 
 
@@ -98,8 +101,10 @@ namespace cartesian_ros_control
   {
     SplineState spline_state;
 
-    // TODO: Transform vel and acc into body-local frames
-    // It makes sense to put this here because we already have math-intense code
+    // Note: The pre-multiplication of velocity and acceleration terms with
+    // `state.q.inverse()` transforms them into the body-local reference frame.
+    // This is required for computing quaternion-based velocities and
+    // accelerations below.
 
     // Convenience method
     auto fill = [](auto& vec, const auto& first, const auto& second)
@@ -119,17 +124,19 @@ namespace cartesian_ros_control
 
     // Spline velocities
     Eigen::Quaterniond q_dot;
-    Eigen::Quaterniond omega(0, state.w.x(), state.w.y(), state.w.z());
+    Eigen::Vector3d tmp = state.q.inverse() * state.w;
+    Eigen::Quaterniond omega(0, tmp.x(), tmp.y(), tmp.z());
     q_dot.coeffs() = 0.5 * (omega * state.q).coeffs();
 
-    fill(spline_state.velocity, state.v, q_dot);
+    fill(spline_state.velocity, state.q.inverse() * state.v, q_dot);
 
     // Spline accelerations
     Eigen::Quaterniond q_ddot;
-    Eigen::Quaterniond omega_dot(0, state.w_dot.x(), state.w_dot.y(), state.w_dot.z());
+    tmp = state.q.inverse() * state.w_dot;
+    Eigen::Quaterniond omega_dot(0, tmp.x(), tmp.y(), tmp.z());
     q_ddot.coeffs() = 0.5 * (omega_dot * state.q).coeffs() + 0.5 * (omega * q_dot).coeffs();
 
-    fill(spline_state.acceleration, state.v_dot, q_ddot);
+    fill(spline_state.acceleration, state.q.inverse() * state.v_dot, q_ddot);
 
     return spline_state;
   };
