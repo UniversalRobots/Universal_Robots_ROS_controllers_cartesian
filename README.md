@@ -2,24 +2,29 @@
 A simple Cartesian trajectory controller that uses the new Cartesian trajectory definition.
 
 ## Rationale
-The action interface for Cartesian trajectories uses established ROS message
-types. The new features currently enable two possible ways of execution:
-Using the new interfaces and using current ROS control mechanisms. The table below highlights possible
-applications.
+This controller shall get you started with executing Cartesian trajectories on your robot.
+It implements a simple action server for `FollowCartesianTrajectory`. There are currently two ways of execution, depending on the interface provided by the robot.
+
+The table below highlights possible applications.
 
 | Hardware interface | Primary application |
 | -------- | -------- |
-| ``PoseCommandInterface``    | You want spline interpolation in ROS but the OEMs driver to take care of inverse kinematics (IK).
-| ``PositionJointInterface``     | You want spline interpolation in ROS and implement your own IK solver. The provided example uses the established Weighted Levenberg-Marquardt solver form KDL.
+| ``PoseCommandInterface``    | You want spline interpolation in ROS but the OEMs driver to take care of inverse kinematics (IK). This variant requires the new Cartesian interfaces.
+| ``PositionJointInterface``     | You want spline interpolation in ROS and implement your own IK solver. The provided example uses the established Weighted Levenberg-Marquardt solver form KDL. This variant is compatible with current ROS-control so that you need not change your RobotHW abstraction.
 
 
 ## Controller .yaml
 An example config for the Universal Robots UR10 looks like this:
 ```yaml
+# This controller uses a Cartesian pose interface for control.
+# Inverse Kinematics is handled by the robot itself.
 pose_cartesian_traj_controller:
     type: "pose_controllers/CartesianTrajectoryController"
 
-    # UR driver convention
+    # This type uses the names according to UR driver convention.
+    # They need not neccessarily exist in the robot_description
+    # and are only used to get the correct control handle from the
+    # hardware interface.
     base: "base"
     tip: "tool0_controller"
 
@@ -31,10 +36,15 @@ pose_cartesian_traj_controller:
        - wrist_2_joint
        - wrist_3_joint
 
+# This controller uses a joint position interface for control.
+# Inverse Kinematics is handled by the controller.
 jnt_cartesian_traj_controller:
     type: "position_controllers/CartesianTrajectoryController"
 
-    # UR driver convention
+    # This type requires valid URDF links and they are used to
+    # set-up an internal kinematics chain. Make sure that they correspond to the drivers' frames.
+    # In this case, tool0 and tool0_controller are identical, but the latter
+    # one does not exist in the URDF description.
     base: "base"
     tip: "tool0"
 
