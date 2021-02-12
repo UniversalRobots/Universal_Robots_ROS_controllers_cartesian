@@ -9,8 +9,8 @@ applications.
 
 | Hardware interface | Primary application |
 | -------- | -------- |
-| ```PoseCommandInterface```    | You want spline interpolation in ROS but the OEMs driver to take care of inverse kinematics (IK).
-| ```PositionJointInterface```     | You want spline interpolation in ROS and implement your own IK solver. The provided example uses the established Weighted Levenberg-Marquardt solver form KDL.
+| ``PoseCommandInterface``    | You want spline interpolation in ROS but the OEMs driver to take care of inverse kinematics (IK).
+| ``PositionJointInterface``     | You want spline interpolation in ROS and implement your own IK solver. The provided example uses the established Weighted Levenberg-Marquardt solver form KDL.
 
 
 ## Controller .yaml
