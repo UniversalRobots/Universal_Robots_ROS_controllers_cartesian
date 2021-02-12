@@ -50,10 +50,12 @@ namespace cartesian_ros_control
 {
 
   /**
-   * @brief TODO
+   * @brief A class for Cartesian trajectory representation and interpolation
    *
-   * TODO:
-   * - Construct from Cartesian ROS trajectory msg
+   * It's meant to be used inside ROS controllers to wrap the complexity of
+   * trajectory interpolation.  Initialize instances of this helper with
+   * Cartesian ROS trajectories and sample \a CartesianState at specific time
+   * steps for robot control.
    *
    */
   class CartesianTrajectory
