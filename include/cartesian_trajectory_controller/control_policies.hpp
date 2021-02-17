@@ -93,9 +93,9 @@ namespace cartesian_ros_control
     }
 
     // Manipulator specific configuration
-    if (!root_nh.getParam("/robot_description", robot_description))
+    if (!root_nh.getParam("robot_description", robot_description))
     {
-      ROS_ERROR_STREAM(ns << ": Failed to load /robot_description from parameter server");
+      ROS_ERROR_STREAM(ns << ": Failed to load robot_description from parameter server");
       return false;
     }
     if (!controller_nh.getParam("base", base))
