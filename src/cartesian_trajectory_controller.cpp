@@ -71,12 +71,14 @@ namespace velocity_controllers
 PLUGINLIB_EXPORT_CLASS(pose_controllers::CartesianTrajectoryController,
                        controller_interface::ControllerBase)
 
+/* Not yet implemented.
 PLUGINLIB_EXPORT_CLASS(twist_controllers::CartesianTrajectoryController,
                        controller_interface::ControllerBase)
+*/
 
 PLUGINLIB_EXPORT_CLASS(position_controllers::CartesianTrajectoryController,
                        controller_interface::ControllerBase)
-
+/* Not yet implemented
 PLUGINLIB_EXPORT_CLASS(velocity_controllers::CartesianTrajectoryController,
                        controller_interface::ControllerBase)
-
+*/

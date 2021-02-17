@@ -9,6 +9,7 @@
     </description>
   </class>
 
+  <!-- Not yet implemented
   <class name="twist_controllers/CartesianTrajectoryController"
          type="twist_controllers::CartesianTrajectoryController"
          base_class_type="controller_interface::ControllerBase">
@@ -17,6 +18,7 @@
             This variant executes the Cartesian trajectories through sampling for a twist-based control interface on the robot.
     </description>
   </class>
+  -->
 
   <class name="position_controllers/CartesianTrajectoryController"
          type="position_controllers::CartesianTrajectoryController"
@@ -27,6 +29,7 @@
     </description>
   </class>
 
+  <!-- Not yet implemented
   <class name="velocity_controllers/CartesianTrajectoryController"
          type="velocity_controllers::CartesianTrajectoryController"
          base_class_type="controller_interface::ControllerBase">
@@ -35,6 +38,7 @@
             This variant executes the Cartesian trajectories through sampling twists and uses a weighted DLS method for the mapping to joint velocities.
     </description>
   </class>
+  -->
 
 
 </library>
