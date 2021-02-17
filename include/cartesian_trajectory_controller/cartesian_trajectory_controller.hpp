@@ -172,7 +172,8 @@ namespace cartesian_trajectory_controller
         return;
       }
 
-      // TODO: Check if trajectory is valid
+      // TODO: Check if trajectory is valid.
+      // Address this once we know more edge cases during beta testing.
       path_tolerances_ = goal->path_tolerance;
       goal_tolerances_ = goal->goal_tolerance;
 
@@ -227,6 +228,7 @@ namespace cartesian_trajectory_controller
 
       // TODO: What should happen when speed scaling was active?
       //       Only check position and orientation in that case?
+      // Address this once we know more edge cases during beta testing.
 
       // Check if goal was reached.
       // Abort if any of the dimensions exceeds its goal tolerance

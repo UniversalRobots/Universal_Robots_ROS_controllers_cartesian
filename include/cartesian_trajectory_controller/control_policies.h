@@ -121,7 +121,7 @@ namespace cartesian_ros_control
             ros::NodeHandle& controller_nh) override;
 
         /**
-         * @brief TODO:
+         * @brief Set the HW interface's command buffer
          *
          * @param cmd Desired Cartesian state of the manipulator
          */
@@ -151,7 +151,7 @@ namespace cartesian_ros_control
         };
 
         /**
-         * @brief TODO:
+         * @brief Set the HW interface's command buffer
          *
          * @param cmd Desired Cartesian state of the manipulator
          */
@@ -176,7 +176,7 @@ namespace cartesian_ros_control
             ros::NodeHandle& controller_nh) override;
 
         /**
-         * @brief TODO:
+         * @brief Set the HW interface's command buffer
          *
          * Uses KDL's Levenberg-Marquardt Inverse Kinematics solver for mapping
          * poses to joint positions.
@@ -206,7 +206,7 @@ namespace cartesian_ros_control
             ros::NodeHandle& controller_nh) override;
 
         /**
-         * @brief TODO:
+         * @brief Set the HW interface's command buffer
          *
          * Uses KDL's weighted DLS method for mapping twists to joint velocitiies.
          *
