@@ -2,8 +2,11 @@
 <package format="2">
   <name>twist_controller</name>
   <version>0.0.0</version>
-  <description>The twist_controller package</description>
-
+  <description>
+    A ros_control controller accepting Cartesian twist messages in order to move a robot manipulator.
+    It uses a Cartesian interface to the robot, so that the robot hardware takes care about
+    doing the inverse kinematics. This could be used e.g. for visual servoing applications.
+  </description>
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
