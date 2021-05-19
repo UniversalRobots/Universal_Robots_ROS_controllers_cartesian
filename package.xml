@@ -2,7 +2,8 @@
 <package format="2">
   <name>cartesian_interface</name>
   <version>0.0.0</version>
-  <description>The cartesian_interface package</description>
+  <description>Defines a hardware interface to send Cartesian commands to a robot hardware and read
+    Cartesian states.</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

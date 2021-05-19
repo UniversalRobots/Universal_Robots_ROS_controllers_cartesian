@@ -8,9 +8,9 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-        roscpp
-        hardware_interface
         geometry_msgs
+        hardware_interface
+        roscpp
   )
 
 
@@ -18,9 +18,9 @@ catkin_package(
   INCLUDE_DIRS include
   #LIBRARIES
   CATKIN_DEPENDS
-    roscpp
-    hardware_interface
     geometry_msgs
+    hardware_interface
+    roscpp
   #DEPENDS system_lib
   )
 
