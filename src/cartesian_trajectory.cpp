@@ -64,6 +64,11 @@ namespace cartesian_ros_control
     // neighboring pairs.
     for (auto i = ros_trajectory.points.begin(); std::next(i) < ros_trajectory.points.end(); ++i)
     {
+      // Waypoints' time from start must strictly increase
+      if (i->time_from_start.toSec() >= std::next(i)->time_from_start.toSec())
+      {
+        return false;
+      }
       CartesianTrajectorySegment s(
           i->time_from_start.toSec(), CartesianState(*i),
           std::next(i)->time_from_start.toSec(), CartesianState(*std::next(i))

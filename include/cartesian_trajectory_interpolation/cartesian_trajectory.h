@@ -81,7 +81,7 @@ namespace cartesian_ros_control
        *
        * @param ros_trajectory The Cartesian trajectory composed with ROS message types
        *
-       * @return True if \b ros_trajectory is valid, else false.
+       * @return True if \b ros_trajectory has increasing waypoints in time, else false.
        */
       bool init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
 
