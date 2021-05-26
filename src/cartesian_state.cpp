@@ -59,12 +59,32 @@ namespace my_tf2
 namespace cartesian_ros_control
 {
 
+  CartesianState::CartesianState()
+  {
+    p = Eigen::Vector3d::Zero();
+    q.x() = 0;
+    q.y() = 0;
+    q.z() = 0;
+    q.w() = 1;
+
+    v = Eigen::Vector3d::Zero();
+    v_dot = Eigen::Vector3d::Zero();
+
+    w = Eigen::Vector3d::Zero();
+    w_dot = Eigen::Vector3d::Zero();
+  }
+
 
   CartesianState::CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint& point)
   {
     // Pose
     tf2::fromMsg(point.pose.position, p);
     tf2::fromMsg(point.pose.orientation, q);
+    if (q.coeffs() == Eigen::Vector4d::Zero())
+    {
+      q.w() = 1;
+    }
+    q.normalize();
 
     // Velocity
     tf2::fromMsg(point.twist.linear, v);
@@ -107,4 +127,14 @@ namespace cartesian_ros_control
     return point;
   }
 
+  std::ostream& operator<<(std::ostream &out, const CartesianState& state)
+  {
+    out << "p:\n" << state.p << '\n';
+    out << "q:\n" << state.q.coeffs() << '\n';
+    out << "v:\n" << state.v << '\n';
+    out << "w:\n" << state.w << '\n';
+    out << "v_dot:\n" << state.v_dot << '\n';
+    out << "w_dot:\n" << state.w_dot;
+    return out;
+  }
 }

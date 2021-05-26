@@ -51,10 +51,16 @@ namespace cartesian_ros_control
    */
   struct CartesianState
   {
-    CartesianState() = default;
+
+    /**
+     * @brief Initializes all quantities to zero and sets the orientation quaternion to identity
+     */
+    CartesianState();
 
     /**
      * @brief Convenience constructor for ROS messages
+     *
+     * Implicitly normalizes the point's orientation quaternion.
      *
      * @param point The desired state
      */
@@ -87,6 +93,16 @@ namespace cartesian_ros_control
      * @return The orientation in axis-angle notation
      */
     Eigen::Vector3d rot() const {Eigen::AngleAxisd a(q); return a.axis() * a.angle();};
+
+    /**
+     * @brief Stream operator for testing and debugging
+     *
+     * @param os The output stream
+     * @param state The CartesianState
+     *
+     * @return Reference to the stream for chaining
+     */
+    friend std::ostream& operator<<(std::ostream &os, const CartesianState& state);
 
     // Pose
     Eigen::Vector3d p; ///< position
