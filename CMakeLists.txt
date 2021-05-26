@@ -209,6 +209,9 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(cartesian_state_test test/cartesian_state_test.cpp)
   target_link_libraries(cartesian_state_test ${catkin_LIBRARIES} ${PROJECT_NAME})
 
+  catkin_add_gtest(cartesian_trajectory_segment_test test/cartesian_trajectory_segment_test.cpp)
+  target_link_libraries(cartesian_trajectory_segment_test ${catkin_LIBRARIES} ${PROJECT_NAME})
+
 
 endif()
 

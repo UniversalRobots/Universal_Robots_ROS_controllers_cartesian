@@ -62,42 +62,24 @@ namespace cartesian_ros_control
     SplineState s(7);
     QuinticSplineSegment::sample(time, s);
 
-    // Cartesian positions
-    state.p = Eigen::Vector3d(s.position[0], s.position[1], s.position[2]);
-    state.q = Eigen::Quaterniond(s.position[3], s.position[4], s.position[5], s.position[6]).normalized();
+    if (time < this->startTime() || time > this->endTime())
+    {
+      state.p = Eigen::Vector3d(s.position[0], s.position[1], s.position[2]);
+      state.q = Eigen::Quaterniond(s.position[3], s.position[4], s.position[5], s.position[6]).normalized();
 
-    // Cartesian velocities
-    Eigen::Quaterniond q_dot(s.velocity[3], s.velocity[4], s.velocity[5], s.velocity[6]);
-    q_dot.normalize();
-
-    Eigen::Quaterniond omega;
-    omega.coeffs() = 2 * (q_dot * state.q.inverse()).coeffs();
-
-    state.v = Eigen::Vector3d(s.velocity[0], s.velocity[1], s.velocity[2]);
-    state.w = Eigen::Vector3d(omega.x(), omega.y(), omega.z());
-
-    // Cartesian accelerations
-    Eigen::Quaterniond q_ddot(s.acceleration[3], s.acceleration[4], s.acceleration[5], s.acceleration[6]);
-    q_ddot.normalize();
-
-    Eigen::Quaterniond omega_dot;
-    omega_dot.coeffs() = 2 * (
-        (q_ddot * state.q.inverse()).coeffs() -
-        (q_dot * state.q.inverse()).coeffs().asDiagonal() * (q_dot * state.q.inverse()).coeffs()  // squared
-        );
-
-    state.v_dot = Eigen::Vector3d(s.acceleration[0], s.acceleration[1], s.acceleration[2]);
-    state.w_dot = Eigen::Vector3d(omega_dot.x(), omega_dot.y(), omega_dot.z());
-
-    // Re-transform vel and acc to the correct reference frame.
-    state.v = state.q * state.v;
-    state.w = state.q * state.w;
-    state.v_dot = state.q * state.v_dot;
-    state.w_dot = state.q * state.w_dot;
+      state.v = Eigen::Vector3d::Zero();
+      state.w = Eigen::Vector3d::Zero();
+      state.v_dot = Eigen::Vector3d::Zero();
+      state.w_dot = Eigen::Vector3d::Zero();
+    }
+    else
+    {
+      state = convert(s);
+    }
   }
 
 
-  SplineState CartesianTrajectorySegment::convert(const CartesianState& state) const
+  SplineState convert(const CartesianState& state)
   {
     SplineState spline_state;
 
@@ -140,4 +122,64 @@ namespace cartesian_ros_control
 
     return spline_state;
   };
+
+
+  CartesianState convert(const SplineState& s)
+  {
+    CartesianState state;
+
+    // Cartesian positions
+    state.p = Eigen::Vector3d(s.position[0], s.position[1], s.position[2]);
+    state.q = Eigen::Quaterniond(s.position[3], s.position[4], s.position[5], s.position[6]).normalized();
+
+    // Cartesian velocities
+    Eigen::Quaterniond q_dot(s.velocity[3], s.velocity[4], s.velocity[5], s.velocity[6]);
+
+    Eigen::Quaterniond omega;
+    omega.coeffs() = 2.0 * (q_dot * state.q.inverse()).coeffs();
+
+    state.v = Eigen::Vector3d(s.velocity[0], s.velocity[1], s.velocity[2]);
+    state.w = Eigen::Vector3d(omega.x(), omega.y(), omega.z());
+
+    // Cartesian accelerations
+    Eigen::Quaterniond q_ddot(s.acceleration[3], s.acceleration[4], s.acceleration[5], s.acceleration[6]);
+
+    Eigen::Quaterniond omega_dot;
+    omega_dot.coeffs() = 2.0 * (
+        (q_ddot * state.q.inverse()).coeffs() -
+        ((q_dot * state.q.inverse()) * (q_dot * state.q.inverse())).coeffs()
+        );
+
+    state.v_dot = Eigen::Vector3d(s.acceleration[0], s.acceleration[1], s.acceleration[2]);
+    state.w_dot = Eigen::Vector3d(omega_dot.x(), omega_dot.y(), omega_dot.z());
+
+    // Re-transform vel and acc to the correct reference frame.
+    state.v = state.q * state.v;
+    state.w = state.q * state.w;
+    state.v_dot = state.q * state.v_dot;
+    state.w_dot = state.q * state.w_dot;
+
+    return state;
+  }
+
+  std::ostream& operator<<(std::ostream &out, const CartesianTrajectorySegment::SplineState& state)
+  {
+    out << "pos:\n";
+    for (size_t i = 0; i < state.position.size(); ++i)
+    {
+      out << state.position[i] << '\n';
+    }
+    out << "vel:\n";
+    for (size_t i = 0; i < state.velocity.size(); ++i)
+    {
+      out << state.velocity[i] << '\n';
+    }
+    out << "acc:\n";
+    for (size_t i = 0; i < state.acceleration.size(); ++i)
+    {
+      out << state.acceleration[i] << '\n';
+    }
+
+    return out;
+  }
 }

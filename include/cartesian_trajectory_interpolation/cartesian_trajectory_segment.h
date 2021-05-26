@@ -89,7 +89,7 @@ namespace cartesian_ros_control
        * @brief State of a 7-dimensional Spline
        *
        * The first three dimensions represent Cartesian translation and the last
-       * four represent the rotation quaternion.  Each dimension has its own
+       * four represent the rotation quaternion (w, x, y, z).  Each dimension has its own
        * position, velocity and acceleration value.
        *
        */
@@ -127,23 +127,46 @@ namespace cartesian_ros_control
        */
       void sample(const Time& time, CartesianState& state) const;
 
-      /**
-       * @brief Convert a CartesianState into a cartesian_ros_control::SplineState
-       *
-       * The computation of quaternion velocities and accelerations from
-       * Cartesian angular velocities and accelerations is based on
-       * <a href="https://math.stackexchange.com/questions/1792826/estimate-angular-velocity-and-acceleration-from-a-sequence-of-rotations">this blog post</a>.
-       * \note SplineState has the velocities and accelerations
-       * given in the body-local reference frame that is implicitly defined
-       * by \b state's pose. 
-       *
-       * @param state The CartesianState to convert
-       *
-       * @return The content of \b state in cartesian_ros_control::SplineState notation
-       */
-      SplineState convert(const CartesianState& state) const;
-
     private:
   };
+
+  /**
+   * @brief Stream operator for testing and debugging
+   *
+   * @param os The output stream
+   * @param state The SplineState
+   *
+   * @return Reference to the stream for chaining
+   */
+  std::ostream& operator<<(std::ostream &os, const CartesianTrajectorySegment::SplineState& state);
+
+  /**
+   * @brief Convert a CartesianState into a cartesian_ros_control::SplineState
+   *
+   * The computation of quaternion velocities and accelerations from
+   * Cartesian angular velocities and accelerations is based on
+   * <a href="https://math.stackexchange.com/questions/1792826">this blog post</a>.
+   * \note SplineState has the velocities and accelerations
+   * given in the body-local reference frame that is implicitly defined
+   * by \b state's pose. 
+   *
+   * @param state The CartesianState to convert
+   *
+   * @return The content of \b state in cartesian_ros_control::SplineState notation
+   */
+  CartesianTrajectorySegment::SplineState convert(const CartesianState& state);
+
+  /**
+   * @brief Convert a cartesian_ros_control::SplineState into a CartesianState
+   *
+   * The computation of Cartesian angular velocities and accelerations from
+   * quaternion velocities and accelerations is based on
+   * <a href="https://math.stackexchange.com/questions/1792826">this blog post</a>.
+   *
+   * @param state The SplineState to convert
+   *
+   * @return The content of \b state in CartesianState notation
+   */
+  CartesianState convert(const CartesianTrajectorySegment::SplineState& state);
 
 }
