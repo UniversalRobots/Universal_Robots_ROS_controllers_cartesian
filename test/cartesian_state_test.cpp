@@ -105,7 +105,7 @@ TEST(TestCartesianState, ConversionReturnsInitializingArgument)
 {
   // Fill some fields with random values.
   // Note that jerk, posture and time_from_start do not have a representation
-  // in CartesianState.
+  // in CartesianState and are therefore initialized to 0 (by default) in order to make their string representations to be expected the same..
 
   cartesian_control_msgs::CartesianTrajectoryPoint init;
   init.acceleration.angular.x = 1.2345;
