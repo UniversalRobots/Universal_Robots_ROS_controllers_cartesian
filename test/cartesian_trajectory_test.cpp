@@ -111,6 +111,44 @@ TEST(TestCartesianTrajectory, NonIncreasingWaypointsInTimeFail)
   EXPECT_FALSE(c_traj.init(init));
 }
 
+TEST(TestCartesianTrajectory, InterpolationGivesPlausibleResults)
+{
+  auto p1 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p1.pose.position.x = 0.0;
+  p1.pose.position.y = 0.0;
+  p1.pose.position.z = 0.0;
+  p1.pose.orientation.x = 0;
+  p1.pose.orientation.y = 0;
+  p1.pose.orientation.z = 0;
+  p1.pose.orientation.w = 1;
+  p1.time_from_start = ros::Duration(0.0);
+
+  auto p2 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p2.pose.position.x = 1.1;
+  p2.pose.position.y = 2.2;
+  p2.pose.position.z = 3.3;
+  p2.pose.orientation.x = 1; // 180 degrees around x
+  p2.pose.orientation.y = 0;
+  p2.pose.orientation.z = 0;
+  p2.pose.orientation.w = 0;
+  p2.time_from_start = ros::Duration(10.0);
+
+  cartesian_control_msgs::CartesianTrajectory traj;
+  traj.points.push_back(p1);
+  traj.points.push_back(p2);
+
+  auto c_traj = CartesianTrajectory(traj);
+  CartesianState c;
+  c_traj.sample(5, c);
+
+  constexpr double pi = 3.14159265358979323846;
+
+  // For the linear case, half the time should give half the values.
+  EXPECT_DOUBLE_EQ(p2.pose.position.x / 2.0, c.p.x());
+  EXPECT_DOUBLE_EQ(p2.pose.position.y / 2.0, c.p.y());
+  EXPECT_DOUBLE_EQ(p2.pose.position.z / 2.0, c.p.z());
+  EXPECT_DOUBLE_EQ(pi / 2.0, c.rot().norm());
+}
 
 int main(int argc, char** argv)
 {
