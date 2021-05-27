@@ -125,7 +125,6 @@ TEST(TestCartesianState, ConversionReturnsInitializingArgument)
 
 TEST(CartesianState, RotationDifferenceIsPlausible)
 {
-  // Subtraction from zero yields the negative argument
   CartesianState a;
   CartesianState b;
   b.p[0] = 1;
@@ -134,6 +133,7 @@ TEST(CartesianState, RotationDifferenceIsPlausible)
   b.v_dot[0] = 1;
   b.w_dot[0] = 1;
 
+  // Subtraction from zero yields the negative argument
   auto diff = a - b;
   EXPECT_DOUBLE_EQ(-b.p[0], diff.p[0]);
   EXPECT_DOUBLE_EQ(-b.v[0], diff.v[0]);
