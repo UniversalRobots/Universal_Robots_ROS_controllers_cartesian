@@ -39,6 +39,7 @@
 
 #include <twist_controller/twist_controller.h>
 #include <pluginlib/class_list_macros.hpp>
+#include "twist_controller/TwistControllerConfig.h"
 
 namespace cartesian_ros_control
 {
@@ -50,6 +51,11 @@ bool TwistController::init(TwistCommandInterface* hw, ros::NodeHandle& n)
     ROS_ERROR_STREAM("Required parameter " << n.resolveName("frame_id") << " not given");
     return false;
   }
+
+  gain_ = n.param("twist_gain", 0.1);
+  server_.reset(new dynamic_reconfigure::Server<twist_controller::TwistControllerConfig>(n));
+  server_->setCallback(
+      boost::bind(&TwistController::reconfigureCallback, this, _1, _2));
 
   handle_ = hw->getHandle(frame_id);
   twist_sub_ = n.subscribe<geometry_msgs::Twist>("command", 1, &TwistController::twistCallback, this);
@@ -91,6 +97,11 @@ void TwistController::twistCallback(const geometry_msgs::TwistConstPtr& msg)
   twist.angular.y = gain_ * msg->angular.y;
   twist.angular.z = gain_ * msg->angular.z;
   command_buffer_.writeFromNonRT(twist);
+}
+
+void TwistController ::reconfigureCallback(const twist_controller::TwistControllerConfig& config, uint32_t level)
+{
+  gain_ = config.twist_gain;
 }
 }  // namespace cartesian_ros_control
 

@@ -55,6 +55,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <depend>cartesian_interface</depend>
+  <depend>dynamic_reconfigure</depend>
   <depend>geometry_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>realtime_tools</depend>

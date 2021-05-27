@@ -10,6 +10,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   cartesian_interface
   controller_interface
+  dynamic_reconfigure
   geometry_msgs
   hardware_interface
   realtime_tools
@@ -91,10 +92,9 @@ find_package(catkin REQUIRED COMPONENTS
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
+generate_dynamic_reconfigure_options(
+  cfg/TwistController.cfg
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -110,6 +110,7 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS
     controller_interface
+    dynamic_reconfigure
     geometry_msgs
     hardware_interface
     realtime_tools

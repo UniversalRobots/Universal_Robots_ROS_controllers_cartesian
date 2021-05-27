@@ -40,14 +40,16 @@
 #pragma once
 
 #include <controller_interface/controller.h>
+#include <dynamic_reconfigure/server.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <realtime_tools/realtime_buffer.h>
 
 #include <cartesian_interface/cartesian_command_interface.h>
 
+#include <twist_controller/TwistControllerConfig.h>
+
 namespace cartesian_ros_control
 {
-
 /**
  * @brief A Cartesian ROS-controller for commanding target twists to a robot
  *
@@ -77,7 +79,9 @@ public:
 private:
   ros::Subscriber twist_sub_;
   void twistCallback(const geometry_msgs::TwistConstPtr& msg);
-  double gain_ = { 0.1 };
+  void reconfigureCallback(const twist_controller::TwistControllerConfig& config, uint32_t level);
+  double gain_;
+  std::shared_ptr<dynamic_reconfigure::Server<twist_controller::TwistControllerConfig>> server_;
 };
 
 }  // namespace cartesian_ros_control
