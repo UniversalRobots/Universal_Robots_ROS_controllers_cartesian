@@ -103,7 +103,7 @@ TEST(TestCartesianState, RosMessageInitializationYieldsNormalizedQuaternions)
 
 TEST(TestCartesianState, ConversionReturnsInitializingArgument)
 {
-  // Fill some fields with random values.
+  // Fill some fields with arbitrary values.
   // Note that jerk, posture and time_from_start do not have a representation
   // in CartesianState and are therefore initialized to 0 (by default) in order to make their string representations to be expected the same..
 
