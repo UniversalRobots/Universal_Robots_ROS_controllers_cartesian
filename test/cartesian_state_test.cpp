@@ -58,10 +58,6 @@ TEST(TestCartesianState, EmptyStateIsZeroInitialized)  // except for quaternion 
     EXPECT_EQ(state.w[i], 0);
     EXPECT_EQ(state.w_dot[i], 0);
   }
-  EXPECT_EQ(state.q.x(), 0);
-  EXPECT_EQ(state.q.y(), 0);
-  EXPECT_EQ(state.q.z(), 0);
-  EXPECT_EQ(state.q.w(), 1);
 }
 
 TEST(TestCartesianState, EmptyStateHasNormalizedQuaternion)
