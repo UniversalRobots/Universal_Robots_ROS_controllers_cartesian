@@ -208,6 +208,12 @@ install(FILES
 ## Testing ##
 #############
 
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+
+  add_rostest(test/cartesian_trajectory_controller.test)
+endif()
+
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_cartesian_trajectory_controller.cpp)
 # if(TARGET ${PROJECT_NAME}-test)

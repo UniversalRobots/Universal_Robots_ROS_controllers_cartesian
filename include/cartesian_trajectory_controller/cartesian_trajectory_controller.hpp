@@ -172,8 +172,6 @@ namespace cartesian_trajectory_controller
         return;
       }
 
-      // TODO: Check if trajectory is valid.
-      // Address this once we know more edge cases during beta testing.
       path_tolerances_ = goal->path_tolerance;
       goal_tolerances_ = goal->goal_tolerance;
 
@@ -186,7 +184,14 @@ namespace cartesian_trajectory_controller
         cartesian_control_msgs::CartesianTrajectory traj = goal->trajectory;
         traj.points.insert(traj.points.begin(), state.toMsg(0));  // start time zero
 
-        trajectory_.init(traj);
+        if (!trajectory_.init(traj))
+        {
+          ROS_ERROR("Action goal has invalid trajectory.");
+          cartesian_control_msgs::FollowCartesianTrajectoryResult result;
+          result.error_code = cartesian_control_msgs::FollowCartesianTrajectoryResult::INVALID_GOAL;
+          action_server_->setAborted(result);
+          return;
+        }
       }
 
       // Time keeping

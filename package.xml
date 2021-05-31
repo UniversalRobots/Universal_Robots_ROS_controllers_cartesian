@@ -74,6 +74,17 @@
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>hardware_interface</exec_depend>
 
+  <test_depend>actionlib</test_depend>
+  <test_depend>actionlib_msgs</test_depend>
+  <test_depend>control_msgs</test_depend>
+  <test_depend>controller_manager_msgs</test_depend>
+  <test_depend>joint_state_controller</test_depend>
+  <test_depend>joint_trajectory_controller</test_depend>
+  <test_depend>robot_state_publisher</test_depend>
+  <test_depend>ros_control_boilerplate</test_depend>
+  <test_depend>rostest</test_depend>
+  <test_depend>trajectory_msgs</test_depend>
+  <test_depend>xacro</test_depend>
 
   <!-- This is important for the export to work -->
   <exec_depend>controller_interface</exec_depend>
