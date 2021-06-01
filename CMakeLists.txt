@@ -204,6 +204,15 @@ install(FILES
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
+# Install test setup files for packages that re-use them
+install(FILES
+  test/config.yaml
+  test/controllers.yaml
+  test/robot.urdf.xacro
+  test/setup.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/test/
+)
+
 #############
 ## Testing ##
 #############
