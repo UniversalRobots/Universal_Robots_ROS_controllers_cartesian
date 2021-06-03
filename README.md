@@ -58,6 +58,22 @@ jnt_cartesian_traj_controller:
 
 ```
 
+## Customizing Inverse Kinematics
+
+Plugins allow you to implement your own (possibly more advanced) Inverse Kinematics algorithm. For instance, you may wish
+to use additional sensors in your environment and react online to objects and collisions.
+
+Take a look at the provided *example_solver* on how to use the plugin mechanism for your custom implementation.
+You can then specify the *ik_solver* at startup in form of a controller-local parameter in the .yaml controller config file:
+
+```yaml
+jnt_cartesian_traj_controller:
+     type: "position_controllers/CartesianTrajectoryController"
+     ik_solver: "example_solver"
+     ...
+
+```
+
 ***
 <!-- 
     ROSIN acknowledgement from the ROSIN press kit

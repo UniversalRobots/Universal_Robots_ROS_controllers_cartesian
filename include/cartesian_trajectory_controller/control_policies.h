@@ -48,6 +48,9 @@
 #include "cartesian_trajectory_interpolation/cartesian_trajectory_segment.h"
 #include "kdl/chainfksolver.hpp"
 #include <cartesian_trajectory_interpolation/cartesian_state.h>
+#include <pluginlib/class_loader.h>
+#include <inverse_kinematics/ik_solver_base.h>
+
 
 // KDL
 #include <kdl/chain.hpp>
@@ -187,7 +190,8 @@ namespace cartesian_ros_control
 
 
       private:
-        std::unique_ptr<KDL::ChainIkSolverPos_LMA> ik_solver_;
+        std::unique_ptr<pluginlib::ClassLoader<IKSolver> > solver_loader_;
+        std::unique_ptr<IKSolver> ik_solver_;
     };
 
 

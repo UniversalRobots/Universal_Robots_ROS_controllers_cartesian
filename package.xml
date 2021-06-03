@@ -98,5 +98,12 @@
     rospack plugins - -attrib=plugin controller_interface
     -->
     <controller_interface plugin="${prefix}/cartesian_trajectory_controller_plugin.xml"/>
+
+    <!--
+    Use
+    rospack plugins - -attrib=plugin cartesian_trajectory_controller
+    to check for available IK solvers
+    -->
+    <cartesian_trajectory_controller plugin="${prefix}/ik_solver_example_plugin.xml"/>
   </export>
 </package>

@@ -1,0 +1,11 @@
+<library path="lib/libik_solver_example">
+
+  <class name="example_solver"
+         type="cartesian_ros_control::ExampleIKSolver"
+         base_class_type="cartesian_ros_control::IKSolver">
+    <description>
+      An example IK solver for joint-based Cartesian trajectory controllers
+    </description>
+  </class>
+
+</library>
