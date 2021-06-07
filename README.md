@@ -57,6 +57,52 @@ jnt_cartesian_traj_controller:
        - wrist_3_joint
 
 ```
+## Interpolation between waypoints
+This Cartesian trajectory controller builds on the [joint_trajectory_controller](http://wiki.ros.org/joint_trajectory_controller)'s quintic spline library.
+
+That library is internally wrapped to work in Cartesian space dimensions and inherits the essential interpolation mechanisms:
+
+- If only poses are specified, linear interpolation will be used.
+- If poses and twists are specified, a cubic spline will be used.
+- If poses, twists and accelerations are specified, a quintic spline will be used.
+- If two succeeding waypoints have different specifications
+  (eg. waypoint 1 is pose-only, end waypoint 2 is pose-twist), the lowest common specification will be used
+  (pose-only in the example).
+
+---
+**Note**:
+By means of the default ROS message initializer, the waypoints' twist and acceleration fields will be zero-initialized.
+Those zeros will be interpreted as _intended_ boundary conditions on velocity and accelerations level.
+As a consequence, specifying pose-only Cartesian trajectories will lead to smooth stops in each waypoint by default (= quintic interpolation with zero velocity/acceleration boundaries).
+
+---
+
+If you want linear behavior for your pose-only Cartesian trajectory, i.e. you don't want those stops, you should mark at least one of the twist field values as _uninitialized_ by setting a `NaN` equivalent.
+Here are two examples how to do that in client code:
+
+In C++:
+```c++
+#include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
+
+cartesian_control_msgs::CartesianTrajectoryPoint p;
+// Fill p.pose here
+p.twist.linear.x = std::nan("0");  // this will declare p.twist uninitialized.
+```
+
+or in Python:
+```python
+from cartesian_control_msgs.msg import CartesianTrajectoryPoint
+
+p = CartesianTrajectoryPoint()
+# Fill p.pose here
+
+p.twist.linear.x = float('NaN')  # this will declare p.twist uninitialized.
+```
+
+Here are further details:
+- Marking twist as uninitialized automatically marks acceleration uninitialized.
+- Uninitializing only individual fields is currently not supported. A single `NaN` in any Cartesian dimension uninitializes the whole twist/acceleration quantity.
+- Note that if you intentionally specify non-zero boundaries for some of the twist/acceleration dimensions, the other dimensions are implicitly 0 by their default initializer.
 
 ## Customizing Inverse Kinematics
 
