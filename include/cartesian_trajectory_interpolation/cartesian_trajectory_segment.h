@@ -101,7 +101,22 @@ namespace cartesian_ros_control
       virtual ~CartesianTrajectorySegment(){};
 
       /**
-       * @brief Construct a Cartesian trajectory segment from stat and end state.
+       * @brief Construct a Cartesian trajectory segment from start and end state.
+       *
+       * This uses the quintic spline interpolation from the joint_trajectory_controller under the hood.
+       * The Cartesian states are converted to spline states to fit into their pipeline.
+       * Here is the essential part of the documentation that also applies here:
+       *
+       * <BLOCKQUOTE>
+       * The start and end states need not necessarily be specified all the way to the acceleration level:
+       * - If only \b positions are specified, linear interpolation will be used.
+       * - If \b positions and \b velocities are specified, a cubic spline will be used.
+       * - If \b positions, \b velocities and \b accelerations are specified, a quintic spline will be used.
+       *
+       * \note If start and end states have different specifications
+       * (eg. start is positon-only, end is position-velocity), the lowest common specification will be used
+       * (position-only in the example).
+       * </BLOCKQUOTE>
        *
        * @param start_time Time in seconds when this segment starts
        * @param start_state CartesianState at start time
@@ -149,6 +164,13 @@ namespace cartesian_ros_control
    * \note SplineState has the velocities and accelerations
    * given in the body-local reference frame that is implicitly defined
    * by \b state's pose. 
+   *
+   * \note By default, all-zero velocities and accelerations are interpreted as intended boundary conditions.
+   * If used together with Cartesian trajectory execution, this will yield
+   * smooth stops in the trajectory's waypoints (= cubic interpolation with
+   * zero velocity/acceleration boundary conditions).
+   * If users want linear interpolation, they should mark the velocities/accelerations as unspecified by setting
+   * at least one of the field values to NaN, e.g. state.v.x() = std::nan("0");
    *
    * @param state The CartesianState to convert
    *

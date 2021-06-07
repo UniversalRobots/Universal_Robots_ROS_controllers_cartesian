@@ -38,9 +38,13 @@
 //-----------------------------------------------------------------------------
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
+#include <algorithm>
+#include <cmath>
 #include "Eigen/src/Core/GlobalFunctions.h"
 #include "Eigen/src/Core/Matrix.h"
+#include "Eigen/src/Core/util/Constants.h"
 #include "Eigen/src/Geometry/Quaternion.h"
+#include <Eigen/Dense>
 
 namespace cartesian_ros_control
 {
@@ -105,6 +109,11 @@ namespace cartesian_ros_control
     fill(spline_state.position, state.p, state.q);
 
     // Spline velocities
+    if(std::isnan(state.v.x()) || std::isnan(state.v.y()) || std::isnan(state.v.z())
+          || std::isnan(state.w.x()) || std::isnan(state.w.y()) || std::isnan(state.w.z()))
+    {
+      return spline_state;  // with uninitialized velocity/acceleration data
+    }
     Eigen::Quaterniond q_dot;
     Eigen::Vector3d tmp = state.q.inverse() * state.w;
     Eigen::Quaterniond omega(0, tmp.x(), tmp.y(), tmp.z());
@@ -113,6 +122,11 @@ namespace cartesian_ros_control
     fill(spline_state.velocity, state.q.inverse() * state.v, q_dot);
 
     // Spline accelerations
+    if(std::isnan(state.v_dot.x()) || std::isnan(state.v_dot.y()) || std::isnan(state.v_dot.z())
+          || std::isnan(state.w_dot.x()) || std::isnan(state.w_dot.y()) || std::isnan(state.w_dot.z()))
+    {
+      return spline_state;  // with uninitialized acceleration data
+    }
     Eigen::Quaterniond q_ddot;
     tmp = state.q.inverse() * state.w_dot;
     Eigen::Quaterniond omega_dot(0, tmp.x(), tmp.y(), tmp.z());
@@ -129,10 +143,18 @@ namespace cartesian_ros_control
     CartesianState state;
 
     // Cartesian positions
+    if (s.position.empty())
+    {
+      return state;  // with positions/velocities/accelerations zero initialized
+    }
     state.p = Eigen::Vector3d(s.position[0], s.position[1], s.position[2]);
     state.q = Eigen::Quaterniond(s.position[3], s.position[4], s.position[5], s.position[6]).normalized();
 
     // Cartesian velocities
+    if (s.velocity.empty())
+    {
+      return state;  // with velocities/accelerations zero initialized
+    }
     Eigen::Quaterniond q_dot(s.velocity[3], s.velocity[4], s.velocity[5], s.velocity[6]);
 
     Eigen::Quaterniond omega;
@@ -142,6 +164,10 @@ namespace cartesian_ros_control
     state.w = Eigen::Vector3d(omega.x(), omega.y(), omega.z());
 
     // Cartesian accelerations
+    if (s.acceleration.empty())
+    {
+      return state;  // with accelerations zero initialized
+    }
     Eigen::Quaterniond q_ddot(s.acceleration[3], s.acceleration[4], s.acceleration[5], s.acceleration[6]);
 
     Eigen::Quaterniond omega_dot;
