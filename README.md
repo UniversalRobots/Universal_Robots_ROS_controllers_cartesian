@@ -120,6 +120,49 @@ jnt_cartesian_traj_controller:
 
 ```
 
+## Visualizing Cartesian trajectories
+
+For some use cases, it might be advantageous to visualize Cartesian trajectories before commanding an actual robot.
+Especially when specifying twist and acceleration boundary conditions for the waypoints,
+the resulting motion might not be intuitive and you might want to check _visually_ if that's what you expect.
+There's an easy mechanism that allows you to do that.
+
+Add an additional `CartesianTrajectoryPublisher` as read-only
+controller to your set of ROS controllers.  It offers the `CartesianTrajectoryController`'s
+action interface but does not claim resources nor actuates the robot's
+joints.  It just publishes the trajectory's interpolated Cartesian state
+as reference `PoseStamped` and `TwistStamped` messages.
+
+The controller specification in .yaml could look like this:
+
+```yaml
+visualize_cartesian_trajectories:
+    type: "cartesian_trajectory_publisher/CartesianTrajectoryPublisher"
+    base: "base_link"
+    tip: "tool0"
+    joints:
+       - shoulder_pan_joint
+       - shoulder_lift_joint
+       - elbow_joint
+       - wrist_1_joint
+       - wrist_2_joint
+       - wrist_3_joint
+```
+
+---
+**Note**: It does _not_ check reachability of the robot end-effector by means of inverse kinematics, nor collisions.
+Its purpose is to offer an easy way for users to test whether their Cartesian trajectories
+_look_ as expected.
+
+---
+
+You can then use the controller's `visualize_cartesian_trajectories/follow_cartesian_trajectory` action interface and inspect
+the trajectory by adding a _Pose_ visualization (`geometry_msgs::PoseStamped`) in RViz for the *visualize_cartesian_trajectories/reference_pose* topic:
+
+![](./doc/resources/rviz_visualize_cartesian_trajectories.png)
+
+
+
 ***
 <!-- 
     ROSIN acknowledgement from the ROSIN press kit

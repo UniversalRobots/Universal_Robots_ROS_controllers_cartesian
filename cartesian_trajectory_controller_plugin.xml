@@ -40,5 +40,14 @@
   </class>
   -->
 
+  <class name="cartesian_trajectory_publisher/CartesianTrajectoryPublisher"
+         type="cartesian_trajectory_publisher::CartesianTrajectoryPublisher"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+        A read-only ROS controller for publishing Cartesian
+        trajectories in the form of reference poses and twists.
+    </description>
+  </class>
+
 
 </library>

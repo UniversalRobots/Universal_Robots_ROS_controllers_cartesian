@@ -41,6 +41,11 @@ class IntegrationTest(unittest.TestCase):
         except rospy.exceptions.ROSException as err:
             self.fail("Could not reach controller action. Msg: {}".format(err))
 
+        self.pub_trajectory = actionlib.SimpleActionClient(
+            'cartesian_trajectory_publisher/follow_cartesian_trajectory', FollowCartesianTrajectoryAction)
+        if not self.cart_client.wait_for_server(timeout):
+            self.fail("Could not reach trajectory publisher action.")
+
         self.switch = rospy.ServiceProxy('/controller_manager/switch_controller', SwitchController)
         try:
             self.switch.wait_for_service(timeout.to_sec())
@@ -52,7 +57,7 @@ class IntegrationTest(unittest.TestCase):
         """ Test the basic functionality on a straight line """
         self.move_to_start()
         self.switch_to_cartesian_control()
-        self.move_square()
+        self.move_square(self.cart_client)
         self.assertEqual(self.cart_client.get_result().error_code,
                          FollowCartesianTrajectoryResult.SUCCESSFUL)
 
@@ -60,7 +65,7 @@ class IntegrationTest(unittest.TestCase):
         """ Test whether the preemption mechanism works correctly """
         self.move_to_start()
         self.switch_to_cartesian_control()
-        self.move_square(wait_for_result=False)
+        self.move_square(self.cart_client, wait_for_result=False)
         time.sleep(3)  # stop somewhere during execution
         self.cart_client.cancel_goal()
         time.sleep(1)
@@ -86,6 +91,30 @@ class IntegrationTest(unittest.TestCase):
         self.cart_client.wait_for_result()
         self.assertEqual(self.cart_client.get_result().error_code,
                          FollowCartesianTrajectoryResult.INVALID_GOAL)
+
+    def test_trajectory_publishing(self):
+        """ Test whether trajectory publishing works """
+
+        self.move_to_start()
+
+        # Activate trajectory publishing
+        srv = SwitchControllerRequest()
+        srv.stop_controllers = []
+        srv.start_controllers = ['cartesian_trajectory_publisher']
+        srv.strictness = SwitchControllerRequest.BEST_EFFORT
+        self.switch(srv)
+
+        self.move_square(self.pub_trajectory)
+
+        # Deactivate trajectory publishing to not spam the other tests.
+        srv = SwitchControllerRequest()
+        srv.stop_controllers = ['cartesian_trajectory_publisher']
+        srv.start_controllers = []
+        srv.strictness = SwitchControllerRequest.BEST_EFFORT
+        self.switch(srv)
+
+        self.assertEqual(self.pub_trajectory.get_result().error_code,
+                         FollowCartesianTrajectoryResult.SUCCESSFUL)
 
     def move_to_start(self):
         srv = SwitchControllerRequest()
@@ -117,7 +146,7 @@ class IntegrationTest(unittest.TestCase):
         srv.strictness = SwitchControllerRequest.BEST_EFFORT
         self.switch(srv)
 
-    def move_square(self, wait_for_result=True):
+    def move_square(self, action_client, wait_for_result=True):
         """ Follow a 20 cm square in the y-z plane within 10 sec """
 
         # Cartesian end-effector pose that corresponds to the start joint
@@ -155,9 +184,9 @@ class IntegrationTest(unittest.TestCase):
         goal.trajectory.points.append(p3)
         goal.trajectory.points.append(p4)
 
-        self.cart_client.send_goal(goal)
+        action_client.send_goal(goal)
         if wait_for_result:
-            self.cart_client.wait_for_result()
+            action_client.wait_for_result()
 
 
 if __name__ == '__main__':

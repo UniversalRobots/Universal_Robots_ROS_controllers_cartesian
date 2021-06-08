@@ -29,6 +29,7 @@
         <node name="stopped_controller_spawner" pkg="controller_manager" type="spawner"
                 args="--stopped
                 cartesian_trajectory_controller
+                cartesian_trajectory_publisher
                 "
         />
 

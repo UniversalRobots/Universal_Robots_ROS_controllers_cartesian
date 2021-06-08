@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /TF1/Frames1
         - /RobotModel1/Links1
+        - /Pose1
       Splitter Ratio: 0.511482
     Tree Height: 747
   - Class: rviz/Selection
@@ -168,6 +169,21 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Axes Length: 0.0500000007
+      Axes Radius: 0.0199999996
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Axes
+      Topic: /cartesian_trajectory_publisher/reference_pose
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 116; 116; 116

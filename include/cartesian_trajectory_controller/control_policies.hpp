@@ -40,6 +40,8 @@
 #include <cartesian_trajectory_controller/cartesian_trajectory_controller.h>
 
 #include <memory>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
 
 // KDL
 #include <kdl/tree.hpp>
@@ -48,6 +50,7 @@
 #include "cartesian_interface/cartesian_command_interface.h"
 #include "cartesian_interface/cartesian_state_handle.h"
 #include "hardware_interface/joint_command_interface.h"
+#include "hardware_interface/joint_state_interface.h"
 #include "kdl/chainiksolvervel_wdls.hpp"
 #include "kdl/frames.hpp"
 #include "kdl/framevel.hpp"
@@ -59,15 +62,13 @@
 namespace cartesian_ros_control
 {
 
-  template <class HWInterface>
-  bool JointBasedController<HWInterface>::init(hardware_interface::RobotHW* hw,
+  template <class HWInterface, class HandleType>
+  bool JointBasedController<HWInterface, HandleType>::init(hardware_interface::RobotHW* hw,
       ros::NodeHandle& root_nh,
       ros::NodeHandle& controller_nh)
   {
     std::string robot_description;
     std::vector<std::string> joint_names;
-    std::string tip;
-    std::string base;
     urdf::Model robot_model;
     KDL::Tree   robot_tree;
 
@@ -98,12 +99,12 @@ namespace cartesian_ros_control
       ROS_ERROR_STREAM(ns << ": Failed to load robot_description from parameter server");
       return false;
     }
-    if (!controller_nh.getParam("base", base))
+    if (!controller_nh.getParam("base", robot_base_))
     {
       ROS_ERROR_STREAM(ns << ": Failed to load base from parameter server");
       return false;
     }
-    if (!controller_nh.getParam("tip", tip))
+    if (!controller_nh.getParam("tip", robot_tip_))
     {
       ROS_ERROR_STREAM(ns << ": Failed to load tip from parameter server");
       return false;
@@ -120,7 +121,7 @@ namespace cartesian_ros_control
       ROS_ERROR_STREAM(ns << ": Failed to parse KDL tree from urdf model");
       return false;
     }
-    if (!robot_tree.getChain(base, tip, robot_chain_))
+    if (!robot_tree.getChain(robot_base_, robot_tip_, robot_chain_))
     {
       ROS_ERROR_STREAM(ns << ": Failed to parse robot chain from urdf model.");
       return false;
@@ -131,8 +132,8 @@ namespace cartesian_ros_control
     return true;
   }
 
-  template <class HWInterface>
-  CartesianState JointBasedController<HWInterface>::getState() const
+  template <class HWInterface, class HandleType>
+  CartesianState JointBasedController<HWInterface, HandleType>::getState() const
   {
     const size_t size = joint_handles_.size();
 
@@ -360,5 +361,56 @@ namespace cartesian_ros_control
     {
       joint_handles_[i].setCommand(target(i));
     }
+  }
+
+  //--------------------------------------------------------------------------------
+  // Trajectory publishing
+  //--------------------------------------------------------------------------------
+
+  bool ControlPolicy<hardware_interface::JointStateInterface>::init(hardware_interface::RobotHW* hw,
+      ros::NodeHandle& root_nh,
+      ros::NodeHandle& controller_nh)
+  {
+    if (!Base::init(hw, root_nh, controller_nh))
+    {
+      return false;
+    };
+
+    // Publishers
+    pose_publisher_ = controller_nh.advertise<geometry_msgs::PoseStamped>("reference_pose", 10);
+    twist_publisher_ = controller_nh.advertise<geometry_msgs::TwistStamped>("reference_twist", 10);
+
+    return true;
+  }
+
+  void ControlPolicy<hardware_interface::JointStateInterface>::updateCommand(const CartesianState& cmd)
+  {
+    // Pose
+    geometry_msgs::PoseStamped p;
+    p.header.frame_id = this->robot_base_;
+    p.header.stamp = ros::Time::now();
+    p.pose.position.x = cmd.p.x();
+    p.pose.position.y = cmd.p.y();
+    p.pose.position.z = cmd.p.z();
+    p.pose.orientation.x = cmd.q.x();
+    p.pose.orientation.y = cmd.q.y();
+    p.pose.orientation.z = cmd.q.z();
+    p.pose.orientation.w = cmd.q.w();
+
+    pose_publisher_.publish(p);
+
+    // Twist
+    geometry_msgs::TwistStamped t;
+    t.header.frame_id = this->robot_base_;
+    t.header.stamp = ros::Time::now();
+    t.twist.linear.x = cmd.v.x();
+    t.twist.linear.y = cmd.v.y();
+    t.twist.linear.z = cmd.v.z();
+    t.twist.angular.x = cmd.w.x();
+    t.twist.angular.y = cmd.w.y();
+    t.twist.angular.z = cmd.w.z();
+
+    twist_publisher_.publish(t);
+
   }
 }

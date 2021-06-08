@@ -41,6 +41,7 @@
 #include <cartesian_trajectory_controller/cartesian_trajectory_controller.h>
 #include <cartesian_interface/cartesian_command_interface.h>
 #include <hardware_interface/joint_command_interface.h>
+#include "hardware_interface/joint_state_interface.h"
 
 namespace pose_controllers
 {
@@ -66,6 +67,12 @@ namespace velocity_controllers
     cartesian_trajectory_controller::CartesianTrajectoryController<hardware_interface::VelocityJointInterface>;
 }
 
+namespace cartesian_trajectory_publisher
+{
+  using CartesianTrajectoryPublisher =
+    cartesian_trajectory_controller::CartesianTrajectoryController<hardware_interface::JointStateInterface>;
+}
+
 
 
 PLUGINLIB_EXPORT_CLASS(pose_controllers::CartesianTrajectoryController,
@@ -82,3 +89,6 @@ PLUGINLIB_EXPORT_CLASS(position_controllers::CartesianTrajectoryController,
 PLUGINLIB_EXPORT_CLASS(velocity_controllers::CartesianTrajectoryController,
                        controller_interface::ControllerBase)
 */
+
+PLUGINLIB_EXPORT_CLASS(cartesian_trajectory_publisher::CartesianTrajectoryPublisher,
+                       controller_interface::ControllerBase)
