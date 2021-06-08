@@ -15,7 +15,6 @@
 // limitations under the License.
 // -- END LICENSE BLOCK ------------------------------------------------
 
-
 //-----------------------------------------------------------------------------
 /*!\file    cartesian_state_test.cpp
  *
@@ -88,7 +87,8 @@ TEST(TestCartesianState, ConversionReturnsInitializingArgument)
 {
   // Fill some fields with arbitrary values.
   // Note that jerk, posture and time_from_start do not have a representation
-  // in CartesianState and are therefore initialized to 0 (by default) in order to make their string representations to be expected the same..
+  // in CartesianState and are therefore initialized to 0 (by default) in order to make their string representations to
+  // be expected the same..
 
   cartesian_control_msgs::CartesianTrajectoryPoint init;
   init.acceleration.angular.x = 1.2345;

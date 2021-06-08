@@ -15,7 +15,6 @@
 // limitations under the License.
 // -- END LICENSE BLOCK ------------------------------------------------
 
-
 //-----------------------------------------------------------------------------
 /*!\file    cartesian_trajectory.h
  *
@@ -32,70 +31,67 @@
 #include <cartesian_control_msgs/CartesianTrajectory.h>
 #include <vector>
 
-
 namespace cartesian_ros_control
 {
+/**
+ * @brief A class for Cartesian trajectory representation and interpolation
+ *
+ * It's meant to be used inside ROS controllers to wrap the complexity of
+ * trajectory interpolation.  Initialize instances of this helper with
+ * Cartesian ROS trajectories and sample \a CartesianState at specific time
+ * steps for robot control.
+ *
+ */
+class CartesianTrajectory
+{
+public:
+  CartesianTrajectory() = default;
 
   /**
-   * @brief A class for Cartesian trajectory representation and interpolation
+   * @brief Construct from ROS messages
    *
-   * It's meant to be used inside ROS controllers to wrap the complexity of
-   * trajectory interpolation.  Initialize instances of this helper with
-   * Cartesian ROS trajectories and sample \a CartesianState at specific time
-   * steps for robot control.
+   * Calls init() and throws std::invalid_argument if that fails.
    *
+   * @param ros_trajectory The Cartesian trajectory composed with ROS message types
    */
-  class CartesianTrajectory
-  {
-    public:
-      CartesianTrajectory() = default;
+  CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
 
-      /**
-       * @brief Construct from ROS messages
-       *
-       * Calls init() and throws std::invalid_argument if that fails.
-       *
-       * @param ros_trajectory The Cartesian trajectory composed with ROS message types
-       */
-      CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
+  virtual ~CartesianTrajectory(){};
 
-      virtual ~CartesianTrajectory(){};
+  /**
+   * @brief Initialize from ROS message
+   *
+   * \note The first waypoint is expected to be the current state with time_from_start == 0.
+   *
+   * @param ros_trajectory The Cartesian trajectory composed with ROS message types
+   *
+   * @return True if \b ros_trajectory has increasing waypoints in time, else false.
+   */
+  bool init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
 
-      /**
-       * @brief Initialize from ROS message
-       *
-       * \note The first waypoint is expected to be the current state with time_from_start == 0.
-       *
-       * @param ros_trajectory The Cartesian trajectory composed with ROS message types
-       *
-       * @return True if \b ros_trajectory has increasing waypoints in time, else false.
-       */
-      bool init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory);
+  /**
+   * @brief Sample a trajectory at a specified time
+   *
+   * The trajectory's waypoints are interpolated with splines (two-point
+   * polynomials) that are uniquely defined between each two waypoints and
+   * that scale with the fields given:
+   *
+   * - Only pose = linear interpolation
+   * - Pose and velocity = cubic interpolation
+   * - Pose, velocity and acceleration = quintic interpolation
+   *
+   * If this trajectory's waypoints have velocity and acceleration
+   * setpoints, \b state also contains the current velocity and
+   * acceleration, respectively.  A typical application is using the
+   * sampled state as reference for robot control.
+   *
+   * @param time Time at which to sample the trajectory
+   * @param state Cartesian state at \b time
+   */
+  void sample(const CartesianTrajectorySegment::Time& time, CartesianState& state);
 
-      /**
-       * @brief Sample a trajectory at a specified time
-       *
-       * The trajectory's waypoints are interpolated with splines (two-point
-       * polynomials) that are uniquely defined between each two waypoints and
-       * that scale with the fields given:
-       *
-       * - Only pose = linear interpolation
-       * - Pose and velocity = cubic interpolation
-       * - Pose, velocity and acceleration = quintic interpolation
-       *
-       * If this trajectory's waypoints have velocity and acceleration
-       * setpoints, \b state also contains the current velocity and
-       * acceleration, respectively.  A typical application is using the
-       * sampled state as reference for robot control.
-       *
-       * @param time Time at which to sample the trajectory
-       * @param state Cartesian state at \b time
-       */
-      void sample(const CartesianTrajectorySegment::Time& time, CartesianState& state);
+private:
+  std::vector<CartesianTrajectorySegment> trajectory_data_;
+};
 
-
-    private:
-      std::vector<CartesianTrajectorySegment> trajectory_data_;
-  };
-
-}
+}  // namespace cartesian_ros_control

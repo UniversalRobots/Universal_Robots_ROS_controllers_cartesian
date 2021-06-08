@@ -30,7 +30,6 @@
 
 namespace cartesian_ros_control
 {
-
 /**
  * @brief A handle for setting pose commands
  *

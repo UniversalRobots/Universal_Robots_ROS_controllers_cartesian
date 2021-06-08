@@ -34,7 +34,6 @@
 
 namespace cartesian_ros_control
 {
-
 /**
  * @brief A state handle for Cartesian hardware interfaces
  *

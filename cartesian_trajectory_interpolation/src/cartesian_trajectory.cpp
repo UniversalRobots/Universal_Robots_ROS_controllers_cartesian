@@ -29,39 +29,36 @@
 
 namespace cartesian_ros_control
 {
-
-  void CartesianTrajectory::sample(const CartesianTrajectorySegment::Time& time, CartesianState& state)
-  {
-    trajectory_interface::sample(trajectory_data_, time, state);
-  }
-
-  CartesianTrajectory::CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
-  {
-    if (!init(ros_trajectory))
-    {
-      throw std::invalid_argument("Trajectory not valid");
-    };
-  }
-
-  bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
-  {
-    trajectory_data_.clear();
-
-    // Loop through the waypoints and build trajectory segments from each two
-    // neighboring pairs.
-    for (auto i = ros_trajectory.points.begin(); std::next(i) < ros_trajectory.points.end(); ++i)
-    {
-      // Waypoints' time from start must strictly increase
-      if (i->time_from_start.toSec() >= std::next(i)->time_from_start.toSec())
-      {
-        return false;
-      }
-      CartesianTrajectorySegment s(
-          i->time_from_start.toSec(), CartesianState(*i),
-          std::next(i)->time_from_start.toSec(), CartesianState(*std::next(i))
-          );
-      trajectory_data_.push_back(s);
-    }
-    return true;
-  }
+void CartesianTrajectory::sample(const CartesianTrajectorySegment::Time& time, CartesianState& state)
+{
+  trajectory_interface::sample(trajectory_data_, time, state);
 }
+
+CartesianTrajectory::CartesianTrajectory(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
+{
+  if (!init(ros_trajectory))
+  {
+    throw std::invalid_argument("Trajectory not valid");
+  };
+}
+
+bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
+{
+  trajectory_data_.clear();
+
+  // Loop through the waypoints and build trajectory segments from each two
+  // neighboring pairs.
+  for (auto i = ros_trajectory.points.begin(); std::next(i) < ros_trajectory.points.end(); ++i)
+  {
+    // Waypoints' time from start must strictly increase
+    if (i->time_from_start.toSec() >= std::next(i)->time_from_start.toSec())
+    {
+      return false;
+    }
+    CartesianTrajectorySegment s(i->time_from_start.toSec(), CartesianState(*i), std::next(i)->time_from_start.toSec(),
+                                 CartesianState(*std::next(i)));
+    trajectory_data_.push_back(s);
+  }
+  return true;
+}
+}  // namespace cartesian_ros_control

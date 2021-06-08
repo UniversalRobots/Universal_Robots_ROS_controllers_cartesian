@@ -24,7 +24,6 @@
  */
 //-----------------------------------------------------------------------------
 
-
 #include <gtest/gtest.h>
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
@@ -114,7 +113,7 @@ TEST(TestCartesianTrajectory, InterpolationGivesPlausibleResults)
   p2.pose.position.x = 1.1;
   p2.pose.position.y = 2.2;
   p2.pose.position.z = 3.3;
-  p2.pose.orientation.x = 1; // 180 degrees around x
+  p2.pose.orientation.x = 1;  // 180 degrees around x
   p2.pose.orientation.y = 0;
   p2.pose.orientation.z = 0;
   p2.pose.orientation.w = 0;

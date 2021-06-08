@@ -15,7 +15,6 @@
 // limitations under the License.
 // -- END LICENSE BLOCK ------------------------------------------------
 
-
 //-----------------------------------------------------------------------------
 /*!\file    ik_solver_base.h
  *
@@ -34,47 +33,46 @@
 
 namespace cartesian_ros_control
 {
+/**
+ * @brief Base class for Inverse Kinematics (IK) solvers
+ *
+ * This base class is meant to provide an interface for custom IK implementations.
+ * The joint-based control policies in the Cartesian trajectory
+ * controller will need some form of IK solver. This allows you to implement
+ * your own (possibly more advanced) algorithm. For instance, you may wish
+ * to consider collision checking by reacting ad-hoc to objects
+ * that additional sensors perceive in your environment.
+ */
+class IKSolver
+{
+public:
+  IKSolver(){};
+  virtual ~IKSolver(){};
 
   /**
-   * @brief Base class for Inverse Kinematics (IK) solvers
+   * @brief Initialize the solver
    *
-   * This base class is meant to provide an interface for custom IK implementations.
-   * The joint-based control policies in the Cartesian trajectory
-   * controller will need some form of IK solver. This allows you to implement
-   * your own (possibly more advanced) algorithm. For instance, you may wish
-   * to consider collision checking by reacting ad-hoc to objects
-   * that additional sensors perceive in your environment.
+   * @param robot_chain Representation of the robot kinematics
+   *
+   * @param root_nh A NodeHandle in the root of the controller manager namespace.
+   *
+   * @param controller_nh A NodeHandle in the namespace of the controller.
+   * This is where the Cartesian trajectory controller-specific configuration resides.
+   *
+   * @return True if initialization was successful.
    */
-  class IKSolver
-  {
-    public:
-      IKSolver(){};
-      virtual ~IKSolver(){};
+  virtual bool init(const KDL::Chain& robot_chain, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) = 0;
 
-      /**
-       * @brief Initialize the solver
-       *
-       * @param robot_chain Representation of the robot kinematics
-       *
-       * @param root_nh A NodeHandle in the root of the controller manager namespace.
-       *
-       * @param controller_nh A NodeHandle in the namespace of the controller.
-       * This is where the Cartesian trajectory controller-specific configuration resides.
-       *
-       * @return True if initialization was successful.
-       */
-      virtual bool init(const KDL::Chain& robot_chain, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) = 0;
+  /**
+   * @brief Compute Inverse Kinematics
+   *
+   * @param q_init Vector of initial joint positions
+   * @param goal Goal pose with respect to the robot base
+   * @param q_out Vector of suitable joint positions
+   *
+   * @return 0 if successful. Derived classes implement specializations.
+   */
+  virtual int cartToJnt(const KDL::JntArray& q_init, const KDL::Frame& goal, KDL::JntArray& q_out) = 0;
+};
 
-      /**
-       * @brief Compute Inverse Kinematics
-       *
-       * @param q_init Vector of initial joint positions
-       * @param goal Goal pose with respect to the robot base
-       * @param q_out Vector of suitable joint positions
-       *
-       * @return 0 if successful. Derived classes implement specializations.
-       */
-      virtual int cartToJnt(const KDL::JntArray& q_init, const KDL::Frame& goal, KDL::JntArray& q_out) = 0;
-  };
-
-}
+}  // namespace cartesian_ros_control

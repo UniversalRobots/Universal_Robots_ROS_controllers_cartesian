@@ -38,62 +38,58 @@
 
 namespace cartesian_trajectory_controller
 {
+template <class HWInterface>
+class CartesianTrajectoryController : public cartesian_ros_control::ControlPolicy<HWInterface>
+{
+public:
+  CartesianTrajectoryController() : cartesian_ros_control::ControlPolicy<HWInterface>(){};
 
-  template <class HWInterface>
-    class CartesianTrajectoryController : public cartesian_ros_control::ControlPolicy<HWInterface>
+  virtual ~CartesianTrajectoryController(){};
+
+  bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
+
+  void starting(const ros::Time& time) override;
+
+  void stopping(const ros::Time& time) override;
+
+  void update(const ros::Time& time, const ros::Duration& period) override;
+
+  void executeCB(const cartesian_control_msgs::FollowCartesianTrajectoryGoalConstPtr& goal);
+
+  void preemptCB();
+
+protected:
+  using ControlPolicy = cartesian_ros_control::ControlPolicy<HWInterface>;
+
+  struct TrajectoryDuration
   {
+    TrajectoryDuration() : now(0.0), end(0.0)
+    {
+    }
 
-    public:
-      CartesianTrajectoryController()
-        : cartesian_ros_control::ControlPolicy<HWInterface>()
-      {};
-
-      virtual ~CartesianTrajectoryController(){};
-
-      bool init(hardware_interface::RobotHW* hw,
-          ros::NodeHandle& root_nh,
-          ros::NodeHandle& controller_nh) override;
-
-      void starting(const ros::Time& time) override;
-
-      void stopping(const ros::Time& time) override;
-
-      void update(const ros::Time& time, const ros::Duration& period) override;
-
-      void executeCB(const cartesian_control_msgs::FollowCartesianTrajectoryGoalConstPtr& goal);
-
-      void preemptCB();
-
-    protected:
-      using ControlPolicy = cartesian_ros_control::ControlPolicy<HWInterface>;
-
-      struct TrajectoryDuration
-      {
-        TrajectoryDuration() : now(0.0), end(0.0) {}
-
-        ros::Duration end; ///< Planned target duration of the current action.
-        ros::Duration now; ///< Current duration of the current action.
-      };
-
-      void timesUp();
-
-      void monitorExecution(const cartesian_ros_control::CartesianState& error);
-
-      bool withinTolerances(const cartesian_ros_control::CartesianState& error,
-                            const cartesian_control_msgs::CartesianTolerance& tolerance);
-
-    private:
-      std::unique_ptr<hardware_interface::SpeedScalingHandle> speed_scaling_;
-      std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
-        action_server_;
-      std::atomic<bool> done_;
-      std::mutex lock_;
-      cartesian_ros_control::CartesianTrajectory trajectory_;
-      TrajectoryDuration trajectory_duration_;
-      cartesian_control_msgs::CartesianTolerance path_tolerances_;
-      cartesian_control_msgs::CartesianTolerance goal_tolerances_;
+    ros::Duration end;  ///< Planned target duration of the current action.
+    ros::Duration now;  ///< Current duration of the current action.
   };
 
-}
+  void timesUp();
+
+  void monitorExecution(const cartesian_ros_control::CartesianState& error);
+
+  bool withinTolerances(const cartesian_ros_control::CartesianState& error,
+                        const cartesian_control_msgs::CartesianTolerance& tolerance);
+
+private:
+  std::unique_ptr<hardware_interface::SpeedScalingHandle> speed_scaling_;
+  std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
+      action_server_;
+  std::atomic<bool> done_;
+  std::mutex lock_;
+  cartesian_ros_control::CartesianTrajectory trajectory_;
+  TrajectoryDuration trajectory_duration_;
+  cartesian_control_msgs::CartesianTolerance path_tolerances_;
+  cartesian_control_msgs::CartesianTolerance goal_tolerances_;
+};
+
+}  // namespace cartesian_trajectory_controller
 
 #include <cartesian_trajectory_controller/cartesian_trajectory_controller.hpp>

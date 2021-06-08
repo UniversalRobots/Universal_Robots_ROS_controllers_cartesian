@@ -24,7 +24,6 @@
  */
 //-----------------------------------------------------------------------------
 
-
 #include <gtest/gtest.h>
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
@@ -49,7 +48,7 @@ TEST(TestCartesianTrajectorySegment, SamplingBeyondBoundariesIsSafe)
   end.w_dot.x() = 2.0;
   double end_time = 5.0;
 
-  CartesianTrajectorySegment seg{start_time, start, end_time, end};
+  CartesianTrajectorySegment seg{ start_time, start, end_time, end };
 
   // Sampling beyond the time boundaries should yield the boundary states with
   // zero velocities and zero accelerations.
@@ -71,7 +70,6 @@ TEST(TestCartesianTrajectorySegment, SamplingBeyondBoundariesIsSafe)
   EXPECT_DOUBLE_EQ(0, sample_lower.w.x());
   EXPECT_DOUBLE_EQ(0, sample_lower.v_dot.x());
   EXPECT_DOUBLE_EQ(0, sample_lower.w_dot.x());
-
 }
 
 TEST(TestCartesianTrajectorySegment, DoubleConversionIsIdentity)
@@ -112,7 +110,6 @@ TEST(TestCartesianTrajectorySegment, DoubleConversionIsIdentity)
   before << d;
   after << convert(convert(d));
   EXPECT_EQ(before.str(), after.str());
-
 }
 
 TEST(TestCartesianTrajectorySegment, NansYieldEmptySplineVelocities)
@@ -144,7 +141,6 @@ TEST(TestCartesianTrajectorySegment, NansYieldEmptySplineVelocities)
   actual << s;
   EXPECT_EQ(expected.str(), actual.str());
 }
-
 
 int main(int argc, char** argv)
 {

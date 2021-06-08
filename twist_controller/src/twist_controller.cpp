@@ -41,8 +41,7 @@ bool TwistController::init(TwistCommandInterface* hw, ros::NodeHandle& n)
 
   gain_ = n.param("twist_gain", 0.1);
   server_.reset(new dynamic_reconfigure::Server<twist_controller::TwistControllerConfig>(n));
-  server_->setCallback(
-      boost::bind(&TwistController::reconfigureCallback, this, _1, _2));
+  server_->setCallback(boost::bind(&TwistController::reconfigureCallback, this, _1, _2));
 
   handle_ = hw->getHandle(frame_id);
   twist_sub_ = n.subscribe<geometry_msgs::Twist>("command", 1, &TwistController::twistCallback, this);

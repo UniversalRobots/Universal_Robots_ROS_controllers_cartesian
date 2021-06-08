@@ -39,7 +39,6 @@
 #include <pluginlib/class_loader.h>
 #include <inverse_kinematics/ik_solver_base.h>
 
-
 // KDL
 #include <kdl/chain.hpp>
 #include <kdl/chainfksolvervel_recursive.hpp>
@@ -49,198 +48,174 @@
 
 namespace cartesian_ros_control
 {
+/**
+ * @brief A common control type with optional speed scaling interface
+ *
+ * @tparam HWInterface Hardware interface essential for control
+ */
+template <class HWInterface>
+using Controller =
+    controller_interface::MultiInterfaceController<HWInterface, hardware_interface::SpeedScalingInterface>;
+
+/**
+ * @brief A common base class for joint-based control policies
+ *
+ * @tparam HWInterface The hardware interface for joint actuation
+ * @tparam HandleType The type of joint handles to use.
+ */
+template <class HWInterface, class HandleType>
+class JointBasedController : public Controller<HWInterface>
+{
+public:
+  JointBasedController() : Controller<HWInterface>(true){};  // optional speedscaling
+
+  virtual bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
+
+  CartesianState getState() const;
+
+protected:
+  std::vector<HandleType> joint_handles_;
+  std::unique_ptr<KDL::ChainFkSolverVel_recursive> fk_solver_;
+  KDL::Chain robot_chain_;
+  std::string robot_base_;
+  std::string robot_tip_;
+};
+
+/**
+ * @brief Primary template
+ *
+ * Fail compilation for all non-specialized control policies.
+ *
+ * @tparam HWInterface Hardware interface essential for control.
+ */
+template <class HWInterface>
+class ControlPolicy;
+
+/**
+ * @brief Specialization for Cartesian pose control
+ */
+template <>
+class ControlPolicy<cartesian_ros_control::PoseCommandInterface>
+  : public Controller<cartesian_ros_control::PoseCommandInterface>
+{
+public:
+  ControlPolicy() : Controller<cartesian_ros_control::PoseCommandInterface>(true){};  // optional speedscaling
+
+  bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
 
   /**
-   * @brief A common control type with optional speed scaling interface
+   * @brief Set the HW interface's command buffer
    *
-   * @tparam HWInterface Hardware interface essential for control
+   * @param cmd Desired Cartesian state of the manipulator
    */
-  template <class HWInterface>
-    using Controller = controller_interface::MultiInterfaceController<HWInterface, hardware_interface::SpeedScalingInterface>;
+  void updateCommand(const CartesianState& cmd);
 
+  CartesianState getState() const;
+
+private:
+  std::string base_;
+  std::string tip_;
+  cartesian_ros_control::PoseCommandHandle handle_;
+};
+
+/**
+ * @brief Specialization for Cartesian twist control
+ */
+template <>
+class ControlPolicy<cartesian_ros_control::TwistCommandInterface>
+  : public Controller<cartesian_ros_control::TwistCommandInterface>
+{
+public:
+  ControlPolicy()
+    : Controller<cartesian_ros_control::TwistCommandInterface>(true)  // optional speedscaling
+    {};
 
   /**
-   * @brief A common base class for joint-based control policies
+   * @brief Set the HW interface's command buffer
    *
-   * @tparam HWInterface The hardware interface for joint actuation
-   * @tparam HandleType The type of joint handles to use.
+   * @param cmd Desired Cartesian state of the manipulator
    */
-  template <class HWInterface, class HandleType>
-    class JointBasedController
-    : public Controller<HWInterface>
-    {
-      public:
-        JointBasedController() : Controller<HWInterface>(true) {};  // optional speedscaling
+  void updateCommand(const cartesian_ros_control::CartesianState& cmd);
 
-        virtual bool init(hardware_interface::RobotHW* hw,
-            ros::NodeHandle& root_nh,
-            ros::NodeHandle& controller_nh) override;
+  cartesian_ros_control::CartesianState getState() const;
+};
 
-        CartesianState getState() const;
+/**
+ * @brief Specialization for joint position control
+ */
+template <>
+class ControlPolicy<hardware_interface::PositionJointInterface>
+  : public JointBasedController<hardware_interface::PositionJointInterface, hardware_interface::JointHandle>
+{
+public:
+  using Base = JointBasedController<hardware_interface::PositionJointInterface, hardware_interface::JointHandle>;
 
-      protected:
-        std::vector<HandleType> joint_handles_;
-        std::unique_ptr<KDL::ChainFkSolverVel_recursive> fk_solver_;
-        KDL::Chain robot_chain_;
-        std::string robot_base_;
-        std::string robot_tip_;
-    };
-
+  bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
 
   /**
-   * @brief Primary template
+   * @brief Set the HW interface's command buffer
    *
-   * Fail compilation for all non-specialized control policies.
+   * Uses KDL's Levenberg-Marquardt Inverse Kinematics solver for mapping
+   * poses to joint positions.
    *
-   * @tparam HWInterface Hardware interface essential for control.
+   * @param cmd Desired Cartesian state of the manipulator
    */
-  template <class HWInterface>
-    class ControlPolicy;
+  void updateCommand(const CartesianState& cmd);
 
+private:
+  std::unique_ptr<pluginlib::ClassLoader<IKSolver> > solver_loader_;
+  std::unique_ptr<IKSolver> ik_solver_;
+};
+
+/**
+ * @brief Specialization for joint velocity control
+ */
+template <>
+class ControlPolicy<hardware_interface::VelocityJointInterface>
+  : public JointBasedController<hardware_interface::VelocityJointInterface, hardware_interface::JointHandle>
+{
+public:
+  using Base = JointBasedController<hardware_interface::VelocityJointInterface, hardware_interface::JointHandle>;
+
+  bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
 
   /**
-   * @brief Specialization for Cartesian pose control
+   * @brief Set the HW interface's command buffer
+   *
+   * Uses KDL's weighted DLS method for mapping twists to joint velocitiies.
+   *
+   * @param cmd Desired Cartesian state of the manipulator
    */
-  template <>
-    class ControlPolicy<cartesian_ros_control::PoseCommandInterface>
-    : public Controller<cartesian_ros_control::PoseCommandInterface>
-    {
+  void updateCommand(const CartesianState& cmd);
 
-      public:
-        ControlPolicy()
-          : Controller<cartesian_ros_control::PoseCommandInterface>(true){};  // optional speedscaling
+private:
+  std::unique_ptr<KDL::ChainIkSolverVel_wdls> ik_solver_;
+};
 
-        bool init(hardware_interface::RobotHW* hw,
-            ros::NodeHandle& root_nh,
-            ros::NodeHandle& controller_nh) override;
+/**
+ * @brief Specialization for a read-only controller for trajectory publishing
+ */
+template <>
+class ControlPolicy<hardware_interface::JointStateInterface>
+  : public JointBasedController<hardware_interface::JointStateInterface, hardware_interface::JointStateHandle>
+{
+public:
+  using Base = JointBasedController<hardware_interface::JointStateInterface, hardware_interface::JointStateHandle>;
 
-        /**
-         * @brief Set the HW interface's command buffer
-         *
-         * @param cmd Desired Cartesian state of the manipulator
-         */
-        void updateCommand(const CartesianState& cmd);
-
-        CartesianState getState() const;
-
-      private:
-        std::string base_;
-        std::string tip_;
-        cartesian_ros_control::PoseCommandHandle handle_;
-    };
-
+  bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
 
   /**
-   * @brief Specialization for Cartesian twist control
+   * @brief Publish Cartesian state to pose and twist topics
+   *
+   * @param cmd Desired Cartesian state of the manipulator
    */
-  template <>
-    class ControlPolicy<cartesian_ros_control::TwistCommandInterface>
-    : public Controller<cartesian_ros_control::TwistCommandInterface>
-    {
+  void updateCommand(const CartesianState& cmd);
 
-      public:
-        ControlPolicy()
-          : Controller<cartesian_ros_control::TwistCommandInterface>(true)  // optional speedscaling
-        {
-        };
+private:
+  ros::Publisher pose_publisher_;
+  ros::Publisher twist_publisher_;
+};
 
-        /**
-         * @brief Set the HW interface's command buffer
-         *
-         * @param cmd Desired Cartesian state of the manipulator
-         */
-        void updateCommand(const cartesian_ros_control::CartesianState& cmd);
-
-        cartesian_ros_control::CartesianState getState() const;
-    };
-
-
-  /**
-   * @brief Specialization for joint position control
-   */
-  template <>
-    class ControlPolicy<hardware_interface::PositionJointInterface>
-    : public JointBasedController<hardware_interface::PositionJointInterface, hardware_interface::JointHandle>
-    {
-      public:
-        using Base = JointBasedController<hardware_interface::PositionJointInterface, hardware_interface::JointHandle>;
-
-        bool init(hardware_interface::RobotHW* hw,
-            ros::NodeHandle& root_nh,
-            ros::NodeHandle& controller_nh) override;
-
-        /**
-         * @brief Set the HW interface's command buffer
-         *
-         * Uses KDL's Levenberg-Marquardt Inverse Kinematics solver for mapping
-         * poses to joint positions.
-         *
-         * @param cmd Desired Cartesian state of the manipulator
-         */
-        void updateCommand(const CartesianState& cmd);
-
-
-      private:
-        std::unique_ptr<pluginlib::ClassLoader<IKSolver> > solver_loader_;
-        std::unique_ptr<IKSolver> ik_solver_;
-    };
-
-
-  /**
-   * @brief Specialization for joint velocity control
-   */
-  template <>
-    class ControlPolicy<hardware_interface::VelocityJointInterface>
-    : public JointBasedController<hardware_interface::VelocityJointInterface, hardware_interface::JointHandle>
-    {
-      public:
-        using Base = JointBasedController<hardware_interface::VelocityJointInterface, hardware_interface::JointHandle>;
-
-        bool init(hardware_interface::RobotHW* hw,
-            ros::NodeHandle& root_nh,
-            ros::NodeHandle& controller_nh) override;
-
-        /**
-         * @brief Set the HW interface's command buffer
-         *
-         * Uses KDL's weighted DLS method for mapping twists to joint velocitiies.
-         *
-         * @param cmd Desired Cartesian state of the manipulator
-         */
-        void updateCommand(const CartesianState& cmd);
-
-      private:
-        std::unique_ptr<KDL::ChainIkSolverVel_wdls> ik_solver_;
-    };
-
-
-  /**
-   * @brief Specialization for a read-only controller for trajectory publishing
-   */
-  template <>
-    class ControlPolicy<hardware_interface::JointStateInterface>
-    : public JointBasedController<hardware_interface::JointStateInterface, hardware_interface::JointStateHandle>
-    {
-      public:
-        using Base = JointBasedController<hardware_interface::JointStateInterface, hardware_interface::JointStateHandle>;
-
-        bool init(hardware_interface::RobotHW* hw,
-            ros::NodeHandle& root_nh,
-            ros::NodeHandle& controller_nh) override;
-
-        /**
-         * @brief Publish Cartesian state to pose and twist topics
-         *
-         * @param cmd Desired Cartesian state of the manipulator
-         */
-        void updateCommand(const CartesianState& cmd);
-
-      private:
-        ros::Publisher pose_publisher_;
-        ros::Publisher twist_publisher_;
-    };
-
-
-}
+}  // namespace cartesian_ros_control
 
 #include <cartesian_trajectory_controller/control_policies.hpp>
