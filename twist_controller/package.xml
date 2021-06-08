@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>twist_controller</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>
     A ros_control controller accepting Cartesian twist messages in order to move a robot manipulator.
     It uses a Cartesian interface to the robot, so that the robot hardware takes care about
@@ -17,7 +17,7 @@
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>BSD</license>
+  <license>Apache-2.0</license>
 
 
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
