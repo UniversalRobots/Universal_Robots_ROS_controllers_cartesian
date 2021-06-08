@@ -1,0 +1,7 @@
+<library path="lib/libtwist_controller">
+  <class name="cartesian_ros_controllers/TwistController" type="cartesian_ros_control::TwistController" base_class_type="controller_interface::ControllerBase">
+    <description>
+      The TwistController receives a twist message and sends that directly to a Cartesian robot interface
+    </description>
+  </class>
+</library>
