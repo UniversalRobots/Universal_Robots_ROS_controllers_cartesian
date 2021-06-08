@@ -1,0 +1,53 @@
+<library path="lib/libcartesian_trajectory_controller">
+
+  <class name="pose_controllers/CartesianTrajectoryController"
+         type="pose_controllers::CartesianTrajectoryController"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+            The CartesianTrajectoryController spline-interpolates a list of Cartesian waypoints in time.
+            This variant executes the Cartesian trajectories through sampling for a pose-based control interface on the robot.
+    </description>
+  </class>
+
+  <!-- Not yet implemented
+  <class name="twist_controllers/CartesianTrajectoryController"
+         type="twist_controllers::CartesianTrajectoryController"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+            The CartesianTrajectoryController spline-interpolates a list of Cartesian waypoints in time.
+            This variant executes the Cartesian trajectories through sampling for a twist-based control interface on the robot.
+    </description>
+  </class>
+  -->
+
+  <class name="position_controllers/CartesianTrajectoryController"
+         type="position_controllers::CartesianTrajectoryController"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+            The CartesianTrajectoryController spline-interpolates a list of Cartesian waypoints in time.
+            This variant executes the Cartesian trajectories through sampling Cartesian poses and uses a Levenberg-Marquardt Inverse Kinematics solver for the mapping to joint positions.
+    </description>
+  </class>
+
+  <!-- Not yet implemented
+  <class name="velocity_controllers/CartesianTrajectoryController"
+         type="velocity_controllers::CartesianTrajectoryController"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+            The CartesianTrajectoryController spline-interpolates a list of Cartesian waypoints in time.
+            This variant executes the Cartesian trajectories through sampling twists and uses a weighted DLS method for the mapping to joint velocities.
+    </description>
+  </class>
+  -->
+
+  <class name="cartesian_trajectory_publisher/CartesianTrajectoryPublisher"
+         type="cartesian_trajectory_publisher::CartesianTrajectoryPublisher"
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+        A read-only ROS controller for publishing Cartesian
+        trajectories in the form of reference poses and twists.
+    </description>
+  </class>
+
+
+</library>

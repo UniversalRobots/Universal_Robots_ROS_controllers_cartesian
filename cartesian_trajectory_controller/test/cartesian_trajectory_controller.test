@@ -1,0 +1,7 @@
+<launch>
+        <include file="$(find cartesian_trajectory_controller)/test/setup.xml"/>
+
+        <!-- Tests -->
+        <test test-name="controller_test" pkg="cartesian_trajectory_controller" type="test_controller.py" time-limit="60.0"/>
+
+</launch>

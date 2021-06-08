@@ -1,0 +1,39 @@
+cartesian_trajectory_controller:
+    type: "position_controllers/CartesianTrajectoryController"
+    base: "base_link"
+    tip: "tool0"
+
+    joints:
+    - joint1
+    - joint2
+    - joint3
+    - joint4
+    - joint5
+    - joint6
+
+cartesian_trajectory_publisher:
+    type: "cartesian_trajectory_publisher/CartesianTrajectoryPublisher"
+    base: "base_link"
+    tip: "tool0"
+    joints:
+    - joint1
+    - joint2
+    - joint3
+    - joint4
+    - joint5
+    - joint6
+
+joint_trajectory_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+    - joint1
+    - joint2
+    - joint3
+    - joint4
+    - joint5
+    - joint6
+
+
+joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50

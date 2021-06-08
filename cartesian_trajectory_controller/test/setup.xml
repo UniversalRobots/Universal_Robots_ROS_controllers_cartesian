@@ -1,0 +1,43 @@
+<launch>
+        <!-- Robot_description -->
+        <param name="robot_description"
+        command="$(find xacro)/xacro --inorder '$(find cartesian_trajectory_controller)/test/robot.urdf.xacro'" />
+
+        <!-- Hardware configuration -->
+        <rosparam file="$(find cartesian_trajectory_controller)/test/config.yaml" command="load"></rosparam>
+
+        <!-- Hardware control node -->
+        <node name="control_node" pkg="ros_control_boilerplate" type="sim_hw_main" output="screen"/>
+
+        <!-- Robot state publisher -->
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+                <param name="publish_frequency" type="double" value="50.0" />
+                <param name="tf_prefix" type="string" value="" />
+        </node>
+
+        <!-- Available controllers -->
+        <rosparam file="$(find cartesian_trajectory_controller)/test/controllers.yaml" command="load"></rosparam>
+
+        <!-- Spawn controllers -->
+        <node name="running_controller_spawner" pkg="controller_manager" type="spawner"
+                args="
+                joint_trajectory_controller
+                joint_state_controller
+                "
+        />
+
+        <node name="stopped_controller_spawner" pkg="controller_manager" type="spawner"
+                args="--stopped
+                cartesian_trajectory_controller
+                cartesian_trajectory_publisher
+                "
+        />
+
+        <!-- Use this visualization for debugging -->
+        <!--
+        <arg name="my_rviz" value="-d $(find cartesian_trajectory_controller)/test/visualization.rviz" />
+        <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="$(arg my_rviz)" output="screen" >
+        </node>
+        -->
+
+</launch>
