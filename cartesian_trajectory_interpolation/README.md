@@ -3,6 +3,12 @@
 A library for building and interpolating Cartesian-space trajectories for
 control.
 
+## Acknowledgement
+Developed in collaboration between:
+
+[<img height="60" alt="Universal Robots A/S" src="../ros_control_cartesian/doc/resources/ur_logo.jpg">](https://www.universal-robots.com/) &nbsp; and &nbsp;
+[<img height="60" alt="FZI Research Center for Information Technology" src="../ros_control_cartesian/doc/resources/fzi_logo.png">](https://www.fzi.de).
+
 ***
 <!-- 
     ROSIN acknowledgement from the ROSIN press kit
@@ -22,4 +28,3 @@ More information: <a href="http://rosin-project.eu">rosin-project.eu</a>
 
 This project has received funding from the European Union’s Horizon 2020  
 research and innovation programme under grant agreement no. 732287. 
-

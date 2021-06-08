@@ -25,6 +25,12 @@ twist_controller:
    - joint6
 ```
 
+## Acknowledgement
+Developed in collaboration between:
+
+[<img height="60" alt="Universal Robots A/S" src="../ros_control_cartesian/doc/resources/ur_logo.jpg">](https://www.universal-robots.com/) &nbsp; and &nbsp;
+[<img height="60" alt="FZI Research Center for Information Technology" src="../ros_control_cartesian/doc/resources/fzi_logo.png">](https://www.fzi.de).
+
 ***
 <!-- 
     ROSIN acknowledgement from the ROSIN press kit
