@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ros_control_cartesian</name>
+  <version>0.0.1</version>
+  <description>scaled controllers metapackage</description>
+
+  <maintainer email="exner@fzi.de">Felix Exner</maintainer>
+  <maintainer email="scherzin@fzi.de">Stefan Scherzinger</maintainer>
+
+  <license>Apache-2.0</license>
+
+  <!-- <url type="website">http://wiki.ros.org/scaled_controllers</url> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>cartesian_interface</exec_depend>
+  <exec_depend>cartesian_trajectory_controller</exec_depend>
+  <exec_depend>cartesian_trajectory_interpolation</exec_depend>
+  <exec_depend>twist_controller</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+
+</package>
