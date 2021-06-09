@@ -30,7 +30,7 @@
 #include <pluginlib/class_list_macros.h>
 
 /**
- * \class cartesian_ros_control::ExampleIKSolver
+ * \class ros_controllers_cartesian::ExampleIKSolver
  *
  * You may explicitly specify this solver with \a "example_solver" as \a
  * ik_solver in the controllers.yaml configuration file:
@@ -43,4 +43,4 @@
  * \endcode
  *
  */
-PLUGINLIB_EXPORT_CLASS(cartesian_ros_control::ExampleIKSolver, cartesian_ros_control::IKSolver)
+PLUGINLIB_EXPORT_CLASS(ros_controllers_cartesian::ExampleIKSolver, ros_controllers_cartesian::IKSolver)

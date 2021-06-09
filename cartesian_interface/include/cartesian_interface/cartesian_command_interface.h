@@ -28,7 +28,7 @@
 
 #include <cartesian_interface/cartesian_state_handle.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A handle for setting pose commands
@@ -137,4 +137,4 @@ class TwistCommandInterface
   : public hardware_interface::HardwareResourceManager<TwistCommandHandle, hardware_interface::ClaimResources>
 {
 };
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

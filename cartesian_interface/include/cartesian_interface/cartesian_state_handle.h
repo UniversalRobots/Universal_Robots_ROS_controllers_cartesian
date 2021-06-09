@@ -32,7 +32,7 @@
 #include <hardware_interface/hardware_interface.h>
 #include <hardware_interface/internal/hardware_resource_manager.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A state handle for Cartesian hardware interfaces
@@ -120,4 +120,4 @@ private:
 class CartesianStateInterface : public hardware_interface::HardwareResourceManager<CartesianStateHandle>
 {
 };
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

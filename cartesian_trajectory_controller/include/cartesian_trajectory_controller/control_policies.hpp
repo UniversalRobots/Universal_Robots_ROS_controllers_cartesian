@@ -46,7 +46,7 @@
 // URDF
 #include <urdf/model.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 template <class HWInterface, class HandleType>
 bool JointBasedController<HWInterface, HandleType>::init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh,
@@ -161,14 +161,14 @@ CartesianState JointBasedController<HWInterface, HandleType>::getState() const
 // Cartesian pose
 //--------------------------------------------------------------------------------
 
-bool ControlPolicy<cartesian_ros_control::PoseCommandInterface>::init(hardware_interface::RobotHW* hw,
+bool ControlPolicy<ros_controllers_cartesian::PoseCommandInterface>::init(hardware_interface::RobotHW* hw,
                                                                       ros::NodeHandle& root_nh,
                                                                       ros::NodeHandle& controller_nh)
 {
   const std::string ns = controller_nh.getNamespace();
 
   // Preconditions
-  auto* cmd_interface = hw->get<cartesian_ros_control::PoseCommandInterface>();
+  auto* cmd_interface = hw->get<ros_controllers_cartesian::PoseCommandInterface>();
   if (!cmd_interface)
   {
     ROS_ERROR_STREAM(ns << ": No PoseCommandInterface found.");
@@ -190,7 +190,7 @@ bool ControlPolicy<cartesian_ros_control::PoseCommandInterface>::init(hardware_i
   return true;
 }
 
-void ControlPolicy<cartesian_ros_control::PoseCommandInterface>::updateCommand(const CartesianState& cmd)
+void ControlPolicy<ros_controllers_cartesian::PoseCommandInterface>::updateCommand(const CartesianState& cmd)
 {
   geometry_msgs::Pose target;
 
@@ -205,7 +205,7 @@ void ControlPolicy<cartesian_ros_control::PoseCommandInterface>::updateCommand(c
   handle_.setCommand(target);
 }
 
-CartesianState ControlPolicy<cartesian_ros_control::PoseCommandInterface>::getState() const
+CartesianState ControlPolicy<ros_controllers_cartesian::PoseCommandInterface>::getState() const
 {
   geometry_msgs::Pose pose = handle_.getPose();
   geometry_msgs::Twist twist = handle_.getTwist();
@@ -400,4 +400,4 @@ void ControlPolicy<hardware_interface::JointStateInterface>::updateCommand(const
 
   twist_publisher_.publish(t);
 }
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

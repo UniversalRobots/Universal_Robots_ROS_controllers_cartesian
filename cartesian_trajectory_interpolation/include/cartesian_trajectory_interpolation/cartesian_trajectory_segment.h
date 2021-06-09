@@ -30,13 +30,13 @@
 #include <trajectory_interface/pos_vel_acc_state.h>
 #include <cartesian_trajectory_interpolation/cartesian_state.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief 7-dimensional quintic spline segment
  *
  * This two-point segment is uniquely defined by its start and end
- * cartesian_ros_control::SplineState.
+ * ros_controllers_cartesian::SplineState.
  */
 using QuinticSplineSegment = trajectory_interface::QuinticSplineSegment<double>;
 
@@ -138,7 +138,7 @@ private:
 std::ostream& operator<<(std::ostream& os, const CartesianTrajectorySegment::SplineState& state);
 
 /**
- * @brief Convert a CartesianState into a cartesian_ros_control::SplineState
+ * @brief Convert a CartesianState into a ros_controllers_cartesian::SplineState
  *
  * The computation of quaternion velocities and accelerations from
  * Cartesian angular velocities and accelerations is based on
@@ -156,12 +156,12 @@ std::ostream& operator<<(std::ostream& os, const CartesianTrajectorySegment::Spl
  *
  * @param state The CartesianState to convert
  *
- * @return The content of \b state in cartesian_ros_control::SplineState notation
+ * @return The content of \b state in ros_controllers_cartesian::SplineState notation
  */
 CartesianTrajectorySegment::SplineState convert(const CartesianState& state);
 
 /**
- * @brief Convert a cartesian_ros_control::SplineState into a CartesianState
+ * @brief Convert a ros_controllers_cartesian::SplineState into a CartesianState
  *
  * The computation of Cartesian angular velocities and accelerations from
  * quaternion velocities and accelerations is based on
@@ -173,4 +173,4 @@ CartesianTrajectorySegment::SplineState convert(const CartesianState& state);
  */
 CartesianState convert(const CartesianTrajectorySegment::SplineState& state);
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

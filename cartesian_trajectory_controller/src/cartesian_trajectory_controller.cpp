@@ -33,13 +33,13 @@
 namespace pose_controllers
 {
 using CartesianTrajectoryController =
-    cartesian_trajectory_controller::CartesianTrajectoryController<cartesian_ros_control::PoseCommandInterface>;
+    cartesian_trajectory_controller::CartesianTrajectoryController<ros_controllers_cartesian::PoseCommandInterface>;
 }
 
 namespace twist_controllers
 {
 using CartesianTrajectoryController =
-    cartesian_trajectory_controller::CartesianTrajectoryController<cartesian_ros_control::TwistCommandInterface>;
+    cartesian_trajectory_controller::CartesianTrajectoryController<ros_controllers_cartesian::TwistCommandInterface>;
 }
 
 namespace position_controllers

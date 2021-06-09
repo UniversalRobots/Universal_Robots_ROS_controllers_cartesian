@@ -41,7 +41,7 @@ geometry_msgs::Vector3 toMsg(const Eigen::Vector3d& in)
 };
 }  // namespace my_tf2
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 CartesianState::CartesianState()
 {
@@ -120,4 +120,4 @@ std::ostream& operator<<(std::ostream& out, const CartesianState& state)
   out << "w_dot:\n" << state.w_dot;
   return out;
 }
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

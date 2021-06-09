@@ -99,7 +99,7 @@ void CartesianTrajectoryController<HWInterface>::update(const ros::Time& time, c
     {
       std::lock_guard<std::mutex> lock_trajectory(lock_);
 
-      cartesian_ros_control::CartesianState desired;
+      ros_controllers_cartesian::CartesianState desired;
       trajectory_.sample(trajectory_duration_.now.toSec(), desired);
 
       ControlPolicy::updateCommand(desired);
@@ -198,7 +198,7 @@ void CartesianTrajectoryController<HWInterface>::timesUp()
   Result result;
 
   // When time is over, sampling gives us the last waypoint.
-  cartesian_ros_control::CartesianState goal;
+  ros_controllers_cartesian::CartesianState goal;
   {
     std::lock_guard<std::mutex> lock_trajectory(lock_);
     trajectory_.sample(trajectory_duration_.now.toSec(), goal);
@@ -227,7 +227,7 @@ void CartesianTrajectoryController<HWInterface>::timesUp()
 }
 
 template <class HWInterface>
-void CartesianTrajectoryController<HWInterface>::monitorExecution(const cartesian_ros_control::CartesianState& error)
+void CartesianTrajectoryController<HWInterface>::monitorExecution(const ros_controllers_cartesian::CartesianState& error)
 {
   if (!withinTolerances(error, path_tolerances_))
   {
@@ -241,7 +241,7 @@ void CartesianTrajectoryController<HWInterface>::monitorExecution(const cartesia
 
 template <class HWInterface>
 bool CartesianTrajectoryController<HWInterface>::withinTolerances(
-    const cartesian_ros_control::CartesianState& error, const cartesian_control_msgs::CartesianTolerance& tolerance)
+    const ros_controllers_cartesian::CartesianState& error, const cartesian_control_msgs::CartesianTolerance& tolerance)
 {
   // Uninitialized tolerances do not need checking
   cartesian_control_msgs::CartesianTolerance uninitialized;

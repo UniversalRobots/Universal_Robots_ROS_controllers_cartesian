@@ -28,7 +28,7 @@
 
 #include <cartesian_trajectory_interpolation/cartesian_trajectory_segment.h>
 
-using namespace cartesian_ros_control;
+using namespace ros_controllers_cartesian;
 
 TEST(TestCartesianTrajectorySegment, SamplingBeyondBoundariesIsSafe)
 {

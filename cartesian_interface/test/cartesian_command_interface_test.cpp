@@ -29,7 +29,7 @@
 #include <cartesian_interface/cartesian_command_interface.h>
 #include <cartesian_interface/cartesian_state_handle.h>
 
-using namespace cartesian_ros_control;
+using namespace ros_controllers_cartesian;
 
 class CartesianCommandInterfaceTest : public ::testing::Test
 {

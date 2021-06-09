@@ -31,7 +31,7 @@
 #include <Eigen/src/Geometry/Quaternion.h>
 #include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
 
-using namespace cartesian_ros_control;
+using namespace ros_controllers_cartesian;
 
 TEST(TestCartesianState, EmptyStateIsZeroInitialized)  // except for quaternion w
 {

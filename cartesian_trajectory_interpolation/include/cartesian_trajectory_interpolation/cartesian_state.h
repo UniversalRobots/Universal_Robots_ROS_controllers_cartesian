@@ -26,7 +26,7 @@
 
 #include <cartesian_control_msgs/CartesianTrajectoryPoint.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief Cartesian state with pose, velocity and acceleration
@@ -106,4 +106,4 @@ struct CartesianState
   Eigen::Vector3d w_dot;  ///< angular acceleration, \f$ \dot{\omega} \f$
 };
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

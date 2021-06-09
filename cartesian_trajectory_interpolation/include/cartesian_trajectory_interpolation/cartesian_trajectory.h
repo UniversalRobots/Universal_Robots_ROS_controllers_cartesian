@@ -31,7 +31,7 @@
 #include <cartesian_control_msgs/CartesianTrajectory.h>
 #include <vector>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A class for Cartesian trajectory representation and interpolation
@@ -94,4 +94,4 @@ private:
   std::vector<CartesianTrajectorySegment> trajectory_data_;
 };
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

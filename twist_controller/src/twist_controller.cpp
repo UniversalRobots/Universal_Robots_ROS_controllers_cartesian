@@ -28,7 +28,7 @@
 #include <pluginlib/class_list_macros.hpp>
 #include "twist_controller/TwistControllerConfig.h"
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 bool TwistController::init(TwistCommandInterface* hw, ros::NodeHandle& n)
 {
@@ -89,6 +89,6 @@ void TwistController ::reconfigureCallback(const twist_controller::TwistControll
 {
   gain_ = config.twist_gain;
 }
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian
 
-PLUGINLIB_EXPORT_CLASS(cartesian_ros_control::TwistController, controller_interface::ControllerBase)
+PLUGINLIB_EXPORT_CLASS(ros_controllers_cartesian::TwistController, controller_interface::ControllerBase)

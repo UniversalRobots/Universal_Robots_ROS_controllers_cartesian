@@ -28,7 +28,7 @@
 
 #include <cartesian_interface/cartesian_state_handle.h>
 
-using namespace cartesian_ros_control;
+using namespace ros_controllers_cartesian;
 
 TEST(CartesianStateHandleTest, TestConstructor)
 {

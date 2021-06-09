@@ -31,7 +31,7 @@
 #include <kdl/chain.hpp>
 #include <memory>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A wrapper around KDL's Levenberg Marquardt solver
@@ -71,4 +71,4 @@ private:
   std::unique_ptr<KDL::ChainIkSolverPos_LMA> lma_solver_;
   KDL::Chain robot_chain_;
 };
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

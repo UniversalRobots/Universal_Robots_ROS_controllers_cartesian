@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ros_control_cartesian</name>
+  <name>ros_controllers_cartesian</name>
   <version>0.0.1</version>
   <description>scaled controllers metapackage</description>
 

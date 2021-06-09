@@ -35,7 +35,7 @@
 
 #include <twist_controller/TwistControllerConfig.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A Cartesian ROS-controller for commanding target twists to a robot
@@ -71,4 +71,4 @@ private:
   std::shared_ptr<dynamic_reconfigure::Server<twist_controller::TwistControllerConfig>> server_;
 };
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

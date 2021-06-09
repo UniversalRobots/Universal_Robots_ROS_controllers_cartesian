@@ -23,9 +23,9 @@ class YourRobot : public hardware_interface::RobotHW
 ...
 
   // New interfaces for Cartesian ROS-controllers
-  cartesian_ros_control::CartesianStateInterface cart_interface_;
-  cartesian_ros_control::TwistCommandInterface twist_interface_;
-  cartesian_ros_control::PoseCommandInterface pose_interface_;
+  ros_controllers_cartesian::CartesianStateInterface cart_interface_;
+  ros_controllers_cartesian::TwistCommandInterface twist_interface_;
+  ros_controllers_cartesian::PoseCommandInterface pose_interface_;
   ...
 
   // Buffers for read/write access
@@ -44,16 +44,16 @@ Registering them could look like this:
 YourRobot::YourRobot()
 {
 ...
-  cartesian_ros_control::CartesianStateHandle cart_state_handle("base", "tip", &cart_pose_, &cart_twist_,
+  ros_controllers_cartesian::CartesianStateHandle cart_state_handle("base", "tip", &cart_pose_, &cart_twist_,
                                                                 &cart_accel_, &cart_jerk_);
   cart_interface_.registerHandle(cart_state_handle);
 
   twist_interface_.registerHandle(
-      cartesian_ros_control::TwistCommandHandle(cart_interface_.getHandle("tip"), &twist_command_));
+      ros_controllers_cartesian::TwistCommandHandle(cart_interface_.getHandle("tip"), &twist_command_));
   twist_interface_.getHandle("tip");
 
   pose_interface_.registerHandle(
-      cartesian_ros_control::PoseCommandHandle(cart_interface_.getHandle("tip"), &pose_command_));
+      ros_controllers_cartesian::PoseCommandHandle(cart_interface_.getHandle("tip"), &pose_command_));
   pose_interface_.getHandle("tip");
 
   // Register interfaces
@@ -79,12 +79,12 @@ read/write access, e.g. in the case of Cartesian pose control:
 #include <cartesian_interface/cartesian_command_interface.h>
 ...
 
-class YourController : public controller_interface::Controller<cartesian_ros_control::PoseCommandInterface>
+class YourController : public controller_interface::Controller<ros_controllers_cartesian::PoseCommandInterface>
 {
 
 ...
 private:
-  cartesian_ros_control::PoseCommandHandle handle_;
+  ros_controllers_cartesian::PoseCommandHandle handle_;
 ...
 }
 ```

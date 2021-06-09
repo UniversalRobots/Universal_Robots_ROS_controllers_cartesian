@@ -27,7 +27,7 @@
 #include <cartesian_trajectory_interpolation/cartesian_trajectory.h>
 #include <trajectory_interface/trajectory_interface.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 void CartesianTrajectory::sample(const CartesianTrajectorySegment::Time& time, CartesianState& state)
 {
@@ -61,4 +61,4 @@ bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory
   }
   return true;
 }
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

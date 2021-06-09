@@ -35,7 +35,7 @@
 #include <ros/ros.h>
 #include <ostream>
 
-using namespace cartesian_ros_control;
+using namespace ros_controllers_cartesian;
 
 TEST(TestCartesianTrajectory, SamplingFromEmptyTrajectoryGivesEmptyState)
 {

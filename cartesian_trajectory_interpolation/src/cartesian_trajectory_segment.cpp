@@ -33,7 +33,7 @@
 #include "Eigen/src/Geometry/Quaternion.h"
 #include <Eigen/Dense>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 using Time = CartesianTrajectorySegment::Time;
 using SplineState = CartesianTrajectorySegment::SplineState;
@@ -185,4 +185,4 @@ std::ostream& operator<<(std::ostream& out, const CartesianTrajectorySegment::Sp
 
   return out;
 }
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

@@ -31,7 +31,7 @@
 #include <kdl/chain.hpp>
 #include <ros/ros.h>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief Base class for Inverse Kinematics (IK) solvers
@@ -75,4 +75,4 @@ public:
   virtual int cartToJnt(const KDL::JntArray& q_init, const KDL::Frame& goal, KDL::JntArray& q_out) = 0;
 };
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian

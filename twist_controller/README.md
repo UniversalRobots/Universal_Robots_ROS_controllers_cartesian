@@ -10,7 +10,7 @@ A possible configuration looks like this:
 
 ```yaml
 twist_controller:
-   type:         cartesian_ros_controllers/TwistController
+   type:         ros_controllers_cartesianlers/TwistController
 
    # The controller uses this identifier to get the according command handle
    # from the hardware interface.

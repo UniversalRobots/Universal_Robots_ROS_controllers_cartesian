@@ -46,7 +46,7 @@
 #include <kdl/chainiksolvervel_wdls.hpp>
 #include <memory>
 
-namespace cartesian_ros_control
+namespace ros_controllers_cartesian
 {
 /**
  * @brief A common control type with optional speed scaling interface
@@ -95,11 +95,11 @@ class ControlPolicy;
  * @brief Specialization for Cartesian pose control
  */
 template <>
-class ControlPolicy<cartesian_ros_control::PoseCommandInterface>
-  : public Controller<cartesian_ros_control::PoseCommandInterface>
+class ControlPolicy<ros_controllers_cartesian::PoseCommandInterface>
+  : public Controller<ros_controllers_cartesian::PoseCommandInterface>
 {
 public:
-  ControlPolicy() : Controller<cartesian_ros_control::PoseCommandInterface>(true){};  // optional speedscaling
+  ControlPolicy() : Controller<ros_controllers_cartesian::PoseCommandInterface>(true){};  // optional speedscaling
 
   bool init(hardware_interface::RobotHW* hw, ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) override;
 
@@ -115,19 +115,19 @@ public:
 private:
   std::string base_;
   std::string tip_;
-  cartesian_ros_control::PoseCommandHandle handle_;
+  ros_controllers_cartesian::PoseCommandHandle handle_;
 };
 
 /**
  * @brief Specialization for Cartesian twist control
  */
 template <>
-class ControlPolicy<cartesian_ros_control::TwistCommandInterface>
-  : public Controller<cartesian_ros_control::TwistCommandInterface>
+class ControlPolicy<ros_controllers_cartesian::TwistCommandInterface>
+  : public Controller<ros_controllers_cartesian::TwistCommandInterface>
 {
 public:
   ControlPolicy()
-    : Controller<cartesian_ros_control::TwistCommandInterface>(true)  // optional speedscaling
+    : Controller<ros_controllers_cartesian::TwistCommandInterface>(true)  // optional speedscaling
     {};
 
   /**
@@ -135,9 +135,9 @@ public:
    *
    * @param cmd Desired Cartesian state of the manipulator
    */
-  void updateCommand(const cartesian_ros_control::CartesianState& cmd);
+  void updateCommand(const ros_controllers_cartesian::CartesianState& cmd);
 
-  cartesian_ros_control::CartesianState getState() const;
+  ros_controllers_cartesian::CartesianState getState() const;
 };
 
 /**
@@ -216,6 +216,6 @@ private:
   ros::Publisher twist_publisher_;
 };
 
-}  // namespace cartesian_ros_control
+}  // namespace ros_controllers_cartesian
 
 #include <cartesian_trajectory_controller/control_policies.hpp>
