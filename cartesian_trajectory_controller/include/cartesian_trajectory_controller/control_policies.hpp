@@ -253,8 +253,9 @@ bool ControlPolicy<hardware_interface::PositionJointInterface>::init(hardware_in
   // Load user specified inverse kinematics solver
   std::string solver_type = controller_nh.param("ik_solver", std::string("example_solver"));
 
-  solver_loader_ = std::make_unique<pluginlib::ClassLoader<IKSolver>>("cartesian_trajectory_controller", "cartesian_"
-                                                                                                         "ros_control::"
+  solver_loader_ = std::make_unique<pluginlib::ClassLoader<IKSolver>>("cartesian_trajectory_controller", "ros_"
+                                                                                                         "controllers_"
+                                                                                                         "cartesian::"
                                                                                                          "IKSolver");
   try
   {
