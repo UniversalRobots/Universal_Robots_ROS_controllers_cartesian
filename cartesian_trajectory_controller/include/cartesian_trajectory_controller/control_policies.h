@@ -27,7 +27,7 @@
 #pragma once
 
 #include <controller_interface/multi_interface_controller.h>
-#include <cartesian_interface/speed_scaling_interface.h>
+#include <speed_scaling_interface/speed_scaling_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <cartesian_interface/cartesian_command_interface.h>

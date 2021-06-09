@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   roscpp
   rospy
+  speed_scaling_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -119,6 +120,7 @@ catkin_package(
   pluginlib
   roscpp
   rospy
+  speed_scaling_interface
 #  DEPENDS system_lib
 )
 

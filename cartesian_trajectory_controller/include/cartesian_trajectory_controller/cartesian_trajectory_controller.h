@@ -34,7 +34,7 @@
 #include <atomic>
 #include <mutex>
 #include <actionlib/server/simple_action_server.h>
-#include <cartesian_interface/speed_scaling_interface.h>
+#include <speed_scaling_interface/speed_scaling_interface.h>
 
 namespace cartesian_trajectory_controller
 {
