@@ -162,8 +162,8 @@ CartesianState JointBasedController<HWInterface, HandleType>::getState() const
 //--------------------------------------------------------------------------------
 
 bool ControlPolicy<ros_controllers_cartesian::PoseCommandInterface>::init(hardware_interface::RobotHW* hw,
-                                                                      ros::NodeHandle& root_nh,
-                                                                      ros::NodeHandle& controller_nh)
+                                                                          ros::NodeHandle& root_nh,
+                                                                          ros::NodeHandle& controller_nh)
 {
   const std::string ns = controller_nh.getNamespace();
 

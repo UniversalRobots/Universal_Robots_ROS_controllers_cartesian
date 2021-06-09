@@ -227,7 +227,8 @@ void CartesianTrajectoryController<HWInterface>::timesUp()
 }
 
 template <class HWInterface>
-void CartesianTrajectoryController<HWInterface>::monitorExecution(const ros_controllers_cartesian::CartesianState& error)
+void CartesianTrajectoryController<HWInterface>::monitorExecution(
+    const ros_controllers_cartesian::CartesianState& error)
 {
   if (!withinTolerances(error, path_tolerances_))
   {
