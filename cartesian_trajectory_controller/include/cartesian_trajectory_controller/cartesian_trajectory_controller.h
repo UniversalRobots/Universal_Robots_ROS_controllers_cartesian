@@ -79,7 +79,7 @@ protected:
                         const cartesian_control_msgs::CartesianTolerance& tolerance);
 
 private:
-  std::unique_ptr<hardware_interface::SpeedScalingHandle> speed_scaling_;
+  std::unique_ptr<scaled_controllers::SpeedScalingHandle> speed_scaling_;
   std::unique_ptr<actionlib::SimpleActionServer<cartesian_control_msgs::FollowCartesianTrajectoryAction> >
       action_server_;
   std::atomic<bool> done_;

@@ -55,7 +55,7 @@ namespace ros_controllers_cartesian
  */
 template <class HWInterface>
 using Controller =
-    controller_interface::MultiInterfaceController<HWInterface, hardware_interface::SpeedScalingInterface>;
+    controller_interface::MultiInterfaceController<HWInterface, scaled_controllers::SpeedScalingInterface>;
 
 /**
  * @brief A common base class for joint-based control policies
