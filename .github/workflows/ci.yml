@@ -20,7 +20,6 @@ jobs:
         ros_repo: [ main, testing ]
     env:
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
-      UPSTREAM_WORKSPACE: .rosinstall
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
