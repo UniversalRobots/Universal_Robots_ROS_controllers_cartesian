@@ -15,6 +15,7 @@ jobs:
         CLANG_FORMAT_VERSION: "10"
   industrial_ci:
     strategy:
+      fail-fast: false
       matrix:
         ros_distro: [ melodic, noetic ]
         ros_repo: [ main, testing ]
