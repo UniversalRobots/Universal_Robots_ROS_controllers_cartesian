@@ -2,8 +2,8 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.1 (2021-06-15)
+------------------
 * Removed trailing whitespaces from README's
 * Contributors: Felix Exner
 
