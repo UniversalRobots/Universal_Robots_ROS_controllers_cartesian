@@ -2,6 +2,9 @@
 Changelog for package ros_controllers_cartesian
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.1 (2021-06-15)
 ------------------
 
