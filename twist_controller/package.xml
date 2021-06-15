@@ -30,7 +30,7 @@
   <!-- Authors do not have to be maintainers, but could be -->
   <!-- Example: -->
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-  <author email="exner@fzi.de">Felix Exner</author> 
+  <author email="exner@fzi.de">Felix Exner</author>
 
 
   <!-- The *depend tags are used to specify dependencies -->
