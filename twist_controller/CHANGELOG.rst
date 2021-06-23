@@ -2,8 +2,8 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2021-06-23)
+------------------
 * Fixed namespace of controller plugin (`#3 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/3>`_)
   It clearly contained a typo
 * Contributors: Felix Exner

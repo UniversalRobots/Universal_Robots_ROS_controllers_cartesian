@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>cartesian_trajectory_interpolation</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <description>Cartesian trajectory interpolation as a standalone library</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->

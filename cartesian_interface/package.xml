@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>cartesian_interface</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <description>Defines a hardware interface to send Cartesian commands to a robot hardware and read
     Cartesian states.</description>
 
