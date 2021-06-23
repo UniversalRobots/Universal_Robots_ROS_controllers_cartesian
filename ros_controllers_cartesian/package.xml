@@ -2,7 +2,7 @@
 <package format="2">
   <name>ros_controllers_cartesian</name>
   <version>0.1.2</version>
-  <description>scaled controllers metapackage</description>
+  <description>Metapackage for Cartesian ROS controllers</description>
 
   <maintainer email="exner@fzi.de">Felix Exner</maintainer>
   <maintainer email="scherzin@fzi.de">Stefan Scherzinger</maintainer>
