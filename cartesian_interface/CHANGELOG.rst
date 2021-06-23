@@ -2,6 +2,9 @@
 Changelog for package cartesian_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.2 (2021-06-15)
 ------------------
 

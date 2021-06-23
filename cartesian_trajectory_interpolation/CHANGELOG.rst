@@ -2,6 +2,9 @@
 Changelog for package cartesian_trajectory_interpolation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.2 (2021-06-15)
 ------------------
 

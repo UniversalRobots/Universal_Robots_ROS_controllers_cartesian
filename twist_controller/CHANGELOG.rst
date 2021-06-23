@@ -2,6 +2,12 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed namespace of controller plugin (`#3 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/3>`_)
+  It clearly contained a typo
+* Contributors: Felix Exner
+
 0.1.2 (2021-06-15)
 ------------------
 * Remove more trailing whitespaces
