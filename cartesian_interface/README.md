@@ -111,8 +111,8 @@ and then use that handle to implement your control loop in `update(...)`:
 ## Acknowledgement
 Developed in collaboration between:
 
-[<img height="60" alt="Universal Robots A/S" src="../ros_control_cartesian/doc/resources/ur_logo.jpg">](https://www.universal-robots.com/) &nbsp; and &nbsp;
-[<img height="60" alt="FZI Research Center for Information Technology" src="../ros_control_cartesian/doc/resources/fzi_logo.png">](https://www.fzi.de).
+[<img height="60" alt="Universal Robots A/S" src="../ros_controllers_cartesian/doc/resources/ur_logo.jpg">](https://www.universal-robots.com/) &nbsp; and &nbsp;
+[<img height="60" alt="FZI Research Center for Information Technology" src="../ros_controllers_cartesian/doc/resources/fzi_logo.png">](https://www.fzi.de).
 
 ***
 <!--
