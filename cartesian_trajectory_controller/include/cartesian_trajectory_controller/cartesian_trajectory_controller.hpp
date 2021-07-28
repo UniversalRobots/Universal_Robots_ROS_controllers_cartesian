@@ -125,10 +125,6 @@ void CartesianTrajectoryController<HWInterface>::update(const ros::Time& time, c
       timesUp();
     }
   }
-  else  // Stay where we are
-  {
-    ControlPolicy::updateCommand(ControlPolicy::getState());
-  }
 }
 
 template <class HWInterface>
