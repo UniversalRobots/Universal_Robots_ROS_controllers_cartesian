@@ -2,6 +2,12 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add websites to package.xml files
+* Update image paths of partner logos (`#4 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/4>`_)
+* Contributors: Felix Exner
+
 0.1.3 (2021-06-23)
 ------------------
 * Fixed namespace of controller plugin (`#3 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/3>`_)

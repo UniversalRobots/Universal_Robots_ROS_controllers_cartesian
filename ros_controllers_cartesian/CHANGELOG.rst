@@ -2,6 +2,11 @@
 Changelog for package ros_controllers_cartesian
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add websites to package.xml files
+* Contributors: Felix Exner
+
 0.1.3 (2021-06-23)
 ------------------
 
