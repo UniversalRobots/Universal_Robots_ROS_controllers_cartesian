@@ -15,12 +15,12 @@ jobs:
         CLANG_FORMAT_VERSION: "10"
   industrial_ci:
     strategy:
+      fail-fast: false
       matrix:
         ros_distro: [ melodic, noetic ]
         ros_repo: [ main, testing ]
     env:
       CCACHE_DIR: "${{ github.workspace }}/.ccache"
-      UPSTREAM_WORKSPACE: .rosinstall
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
