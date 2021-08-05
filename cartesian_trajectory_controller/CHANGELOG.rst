@@ -2,8 +2,8 @@
 Changelog for package cartesian_trajectory_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.4 (2021-08-05)
+------------------
 * Make control update open-loop without active action (`#5 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/5>`_)
 * Add websites to package.xml files
 * Update image paths of partner logos (`#4 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/4>`_)
