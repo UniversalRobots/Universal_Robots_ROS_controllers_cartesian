@@ -1,4 +1,4 @@
-<library path="lib/libtwist_controller">
+<library path="lib/libcartesian_twist_controller">
   <class name="ros_controllers_cartesian/TwistController"
          type="ros_controllers_cartesian::TwistController"
          base_class_type="controller_interface::ControllerBase">
