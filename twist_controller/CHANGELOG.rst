@@ -2,8 +2,8 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.5 (2021-12-02)
+------------------
 * Rename library target (`#10 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/10>`_)
   Using the `cartesian` prefix for the library target shall avoid clashes
   with IPA's `cob_twist_controller`.
