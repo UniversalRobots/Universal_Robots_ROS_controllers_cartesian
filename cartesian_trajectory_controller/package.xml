@@ -53,6 +53,7 @@
   <test_depend>trajectory_msgs</test_depend>
   <test_depend>xacro</test_depend>
 
+<!-- Required for pluginlib's export to the controller_interface package -->
   <exec_depend>controller_interface</exec_depend>
 
   <export>
