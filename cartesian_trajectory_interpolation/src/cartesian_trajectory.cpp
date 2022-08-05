@@ -45,6 +45,7 @@ CartesianTrajectory::CartesianTrajectory(const cartesian_control_msgs::Cartesian
 bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory& ros_trajectory)
 {
   trajectory_data_.clear();
+  bool sign_flipped = false;
 
   // Loop through the waypoints and build trajectory segments from each two
   // neighboring pairs.
@@ -55,8 +56,26 @@ bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory
     {
       return false;
     }
-    CartesianTrajectorySegment s(i->time_from_start.toSec(), CartesianState(*i), std::next(i)->time_from_start.toSec(),
-                                 CartesianState(*std::next(i)));
+
+    CartesianState state = CartesianState(*i);
+    CartesianState next_state = CartesianState(*std::next(i));
+
+    if (sign_flipped)
+    {
+      state.q = state.q.conjugate();
+      state.q.w() = state.q.w() * -1;
+      sign_flipped = false;
+    }
+
+    // If the dot product is negative, we change the sing of the orientation to not travel the long way around
+    double dot_product = state.q.dot(next_state.q);
+    if (dot_product < 0.0)
+    {
+      next_state.q = next_state.q.conjugate();
+      next_state.q.w() = next_state.q.w() * -1;
+      sign_flipped = true;
+    }
+    CartesianTrajectorySegment s(i->time_from_start.toSec(), state, std::next(i)->time_from_start.toSec(), next_state);
     trajectory_data_.push_back(s);
   }
   return true;

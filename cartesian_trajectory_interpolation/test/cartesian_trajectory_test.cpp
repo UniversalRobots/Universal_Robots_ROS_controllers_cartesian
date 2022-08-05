@@ -136,6 +136,83 @@ TEST(TestCartesianTrajectory, InterpolationGivesPlausibleResults)
   EXPECT_DOUBLE_EQ(pi / 2.0, c.rot().norm());
 }
 
+TEST(TestCartesianTrajectory, OppositeSignsGivesSameResults)
+{
+  // Since opposite sign is the same orientation, it shouldn't interpolate the orientation in this case
+  auto p1 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p1.pose.position.x = 0.0;
+  p1.pose.position.y = 0.0;
+  p1.pose.position.z = 0.0;
+  p1.pose.orientation.x = 0.0353693;
+  p1.pose.orientation.y = 0.984552;
+  p1.pose.orientation.z = 0.1707371;
+  p1.pose.orientation.w = 0.0159721;
+  p1.time_from_start = ros::Duration(0.0);
+
+  auto p2 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p2.pose.position.x = 0.0;
+  p2.pose.position.y = 0.0;
+  p2.pose.position.z = 0.0;
+  // Sign flip
+  p2.pose.orientation.x = -p1.pose.orientation.x;
+  p2.pose.orientation.y = -p1.pose.orientation.y;
+  p2.pose.orientation.z = -p1.pose.orientation.z;
+  p2.pose.orientation.w = -p1.pose.orientation.w;
+  p2.time_from_start = ros::Duration(5.0);
+
+  cartesian_control_msgs::CartesianTrajectory traj;
+  traj.points.push_back(p1);
+  traj.points.push_back(p2);
+
+  auto c_traj = CartesianTrajectory(traj);
+  CartesianState c1, c2;
+  c_traj.sample(1.0, c1);
+  c_traj.sample(4.0, c2);
+
+  EXPECT_DOUBLE_EQ(c1.q.x(), c2.q.x());
+  EXPECT_DOUBLE_EQ(c1.q.y(), c2.q.y());
+  EXPECT_DOUBLE_EQ(c1.q.z(), c2.q.z());
+  EXPECT_DOUBLE_EQ(c1.q.w(), c2.q.w());
+}
+
+TEST(TestCartesianTrajectory, ShortestPathIsFollowed)
+{
+  auto p1 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p1.pose.position.x = 0.0;
+  p1.pose.position.y = 0.0;
+  p1.pose.position.z = 0.0;
+  p1.pose.orientation.x = 0.1046779;
+  p1.pose.orientation.y = -0.7045626;
+  p1.pose.orientation.z = 0.1234662;
+  p1.pose.orientation.w = 0.6909343;
+  p1.time_from_start = ros::Duration(0.0);
+
+  auto p2 = cartesian_control_msgs::CartesianTrajectoryPoint();
+  p2.pose.position.x = 0.0;
+  p2.pose.position.y = 0.0;
+  p2.pose.position.z = 0.0;
+  // Sign flip
+  p2.pose.orientation.x = 0.0485966;
+  p2.pose.orientation.y = 0.7107247;
+  p2.pose.orientation.z = 0.031284;
+  p2.pose.orientation.w = -0.7010921;
+  p2.time_from_start = ros::Duration(5.0);
+
+  cartesian_control_msgs::CartesianTrajectory traj;
+  traj.points.push_back(p1);
+  traj.points.push_back(p2);
+
+  auto c_traj = CartesianTrajectory(traj);
+  CartesianState c;
+  c_traj.sample(5.0, c);
+
+  // To follow the shorets path, the second trajectory point should be inverted
+  EXPECT_NEAR(p2.pose.orientation.x * -1, c.q.x(), 0.001);
+  EXPECT_NEAR(p2.pose.orientation.y * -1, c.q.y(), 0.001);
+  EXPECT_NEAR(p2.pose.orientation.z * -1, c.q.z(), 0.001);
+  EXPECT_NEAR(p2.pose.orientation.w * -1, c.q.w(), 0.001);
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
