@@ -67,7 +67,7 @@ bool CartesianTrajectory::init(const cartesian_control_msgs::CartesianTrajectory
       sign_flipped = false;
     }
 
-    // If the dot product is negative, we change the sing of the orientation to not travel the long way around
+    // If the dot product is negative, we change the sign of the orientation to not travel the long way around
     double dot_product = state.q.dot(next_state.q);
     if (dot_product < 0.0)
     {
