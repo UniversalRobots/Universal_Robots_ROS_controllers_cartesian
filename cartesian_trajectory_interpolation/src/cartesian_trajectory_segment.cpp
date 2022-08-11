@@ -70,6 +70,7 @@ SplineState convert(const CartesianState& state)
 
   // Note: The pre-multiplication of velocity and acceleration terms with
   // `state.q.inverse()` transforms them into the body-local reference frame.
+  // The calculation performed is `state.q.inverse() * w * state.q()`
   // This is required for computing quaternion-based velocities and
   // accelerations below.
 
@@ -97,7 +98,8 @@ SplineState convert(const CartesianState& state)
   Eigen::Quaterniond q_dot;
   Eigen::Vector3d tmp = state.q.inverse() * state.w;
   Eigen::Quaterniond omega(0, tmp.x(), tmp.y(), tmp.z());
-  q_dot.coeffs() = 0.5 * (omega * state.q).coeffs();
+  // Calculate quaternion based velocity
+  q_dot.coeffs() = 0.5 * (state.q * omega).coeffs();
 
   fill(spline_state.velocity, state.q.inverse() * state.v, q_dot);
 
@@ -110,7 +112,8 @@ SplineState convert(const CartesianState& state)
   Eigen::Quaterniond q_ddot;
   tmp = state.q.inverse() * state.w_dot;
   Eigen::Quaterniond omega_dot(0, tmp.x(), tmp.y(), tmp.z());
-  q_ddot.coeffs() = 0.5 * (omega_dot * state.q).coeffs() + 0.5 * (omega * q_dot).coeffs();
+  // Calculate quaternion based acceleration
+  q_ddot.coeffs() = 0.5 * (state.q * omega_dot).coeffs() + 0.5 * (q_dot * omega).coeffs();
 
   fill(spline_state.acceleration, state.q.inverse() * state.v_dot, q_ddot);
 
@@ -119,6 +122,10 @@ SplineState convert(const CartesianState& state)
 
 CartesianState convert(const SplineState& s)
 {
+  // Note: The pre-multiplication of velocity and acceleration terms with
+  // `state.q.()` transforms them back into correct reference frame.
+  // The calculation performed is `state.q() * w * state.q.inverse()`
+
   CartesianState state;
 
   // Cartesian positions
@@ -136,8 +143,9 @@ CartesianState convert(const SplineState& s)
   }
   Eigen::Quaterniond q_dot(s.velocity[3], s.velocity[4], s.velocity[5], s.velocity[6]);
 
+  // Calculate vel from quaternion based velocity
   Eigen::Quaterniond omega;
-  omega.coeffs() = 2.0 * (q_dot * state.q.inverse()).coeffs();
+  omega.coeffs() = 2.0 * (state.q.inverse() * q_dot).coeffs();
 
   state.v = Eigen::Vector3d(s.velocity[0], s.velocity[1], s.velocity[2]);
   state.w = Eigen::Vector3d(omega.x(), omega.y(), omega.z());
@@ -145,13 +153,17 @@ CartesianState convert(const SplineState& s)
   // Cartesian accelerations
   if (s.acceleration.empty())
   {
+    // Re-transform vel to the correct reference frame.
+    state.v = state.q * state.v;
+    state.w = state.q * state.w;
     return state;  // with accelerations zero initialized
   }
   Eigen::Quaterniond q_ddot(s.acceleration[3], s.acceleration[4], s.acceleration[5], s.acceleration[6]);
 
+  // Calculate acc from quaternion based acceleration
   Eigen::Quaterniond omega_dot;
-  omega_dot.coeffs() = 2.0 * ((q_ddot * state.q.inverse()).coeffs() -
-                              ((q_dot * state.q.inverse()) * (q_dot * state.q.inverse())).coeffs());
+  omega_dot.coeffs() = 2.0 * ((state.q.inverse() * q_ddot).coeffs() -
+                              ((state.q.inverse() * q_dot) * (state.q.inverse() * q_dot)).coeffs());
 
   state.v_dot = Eigen::Vector3d(s.acceleration[0], s.acceleration[1], s.acceleration[2]);
   state.w_dot = Eigen::Vector3d(omega_dot.x(), omega_dot.y(), omega_dot.z());
