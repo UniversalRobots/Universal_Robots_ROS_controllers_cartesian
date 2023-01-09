@@ -143,7 +143,7 @@ std::ostream& operator<<(std::ostream& os, const CartesianTrajectorySegment::Spl
  * The computation of quaternion velocities and accelerations from
  * Cartesian angular velocities and accelerations is based on
  * <a href="https://math.stackexchange.com/questions/1792826">this blog post</a> and on <a
- * href="https://arxiv.org/abs/0811.2889v1">this article</a>. 
+ * href="https://arxiv.org/abs/0811.2889v1">this article</a>.
  * \note SplineState has the velocities and accelerations
  * given in the body-local reference frame that is implicitly defined
  * by \b state's pose.
