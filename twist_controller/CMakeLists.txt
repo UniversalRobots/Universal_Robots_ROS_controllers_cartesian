@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   realtime_tools
   roscpp
+  pluginlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -115,6 +116,7 @@ catkin_package(
     hardware_interface
     realtime_tools
     roscpp
+    pluginlib
   #DEPENDS system_lib
 )
 
