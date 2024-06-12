@@ -2,6 +2,11 @@
 Changelog for package cartesian_interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Clean up package.xml files (`#13 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/13>`_)
+* Contributors: Felix Exner
+
 0.1.5 (2021-12-02)
 ------------------
 

@@ -2,6 +2,12 @@
 Changelog for package twist_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add missing pluginlib (`#16 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/pull/16>`_)
+* Clean up package.xml files (`#13 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/13>`_)
+* Contributors: Felix Exner, Hongzhuo Liang
+
 0.1.5 (2021-12-02)
 ------------------
 * Rename library target (`#10 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/10>`_)
