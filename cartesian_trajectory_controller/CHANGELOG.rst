@@ -2,8 +2,8 @@
 Changelog for package cartesian_trajectory_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.6 (2024-06-12)
+------------------
 * Clean up package.xml files (`#13 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/13>`_)
 * Contributors: Felix Exner
 
