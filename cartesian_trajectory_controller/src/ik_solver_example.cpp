@@ -24,7 +24,7 @@
  */
 //-----------------------------------------------------------------------------
 
-#include <inverse_kinematics/ik_solver_example.h>
+#include <cartesian_trajectory_controller/ik_solver_example.h>
 
 // Pluginlib
 #include <pluginlib/class_list_macros.h>

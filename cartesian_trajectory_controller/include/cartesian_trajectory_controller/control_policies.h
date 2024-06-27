@@ -36,8 +36,8 @@
 #include "hardware_interface/joint_state_interface.h"
 #include "kdl/chainfksolver.hpp"
 #include <cartesian_trajectory_interpolation/cartesian_state.h>
+#include <cartesian_trajectory_controller/ik_solver_base.h>
 #include <pluginlib/class_loader.h>
-#include <inverse_kinematics/ik_solver_base.h>
 
 // KDL
 #include <kdl/chain.hpp>
