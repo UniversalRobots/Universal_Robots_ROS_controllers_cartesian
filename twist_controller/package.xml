@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>twist_controller</name>
-  <version>0.1.6</version>
+  <version>0.1.7</version>
   <description>
     A ros_control controller accepting Cartesian twist messages in order to move a robot manipulator.
     It uses a Cartesian interface to the robot, so that the robot hardware takes care about
