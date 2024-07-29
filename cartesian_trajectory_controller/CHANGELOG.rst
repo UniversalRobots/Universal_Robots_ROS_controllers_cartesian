@@ -2,6 +2,11 @@
 Changelog for package cartesian_trajectory_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Move ik_solver header files to cartesian_trajectory_controller (`#19 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/19>`_)
+* Contributors: Felix Exner (fexner)
+
 0.1.6 (2024-06-12)
 ------------------
 * Clean up package.xml files (`#13 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/13>`_)

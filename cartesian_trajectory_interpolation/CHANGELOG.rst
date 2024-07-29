@@ -2,6 +2,9 @@
 Changelog for package cartesian_trajectory_interpolation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.6 (2024-06-12)
 ------------------
 * Changed the order of multiplication when calculating quaternion based… (`#15 <https://github.com/UniversalRobots/Universal_Robots_ROS_controllers_cartesian/issues/15>`_)
