@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <inverse_kinematics/ik_solver_base.h>
+#include <cartesian_trajectory_controller/ik_solver_base.h>
 #include <kdl/chainiksolverpos_lma.hpp>
 #include <kdl/chain.hpp>
 #include <memory>
